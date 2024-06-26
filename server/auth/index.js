@@ -6,5 +6,5 @@ const { API_PORT } = process.env;
 const port = process.env.PORT || API_PORT;
 
 server.listen(port, () => {
-  console.log(`Сервер запущен на ${port} порту`);
+  console.log(`Сервер аутентификации запущен на ${port} порту`);
 });

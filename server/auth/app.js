@@ -42,7 +42,7 @@ app.post("/register", async (req, res) => {
         }
       );
       user.token = token;
-
+      res.setHeader('Content-Type', 'application/json');
       res.status(201).json(user);
     } catch (err) {
       console.log(err);
@@ -69,10 +69,12 @@ app.post("/register", async (req, res) => {
         );
 
         user.token = token;
-
+        res.setHeader('Content-Type', 'application/json');
         res.status(200).json(user);
       }
-      res.status(400).send("Неверные данные");
+      else {
+        res.status(400).send("Неверные данные");
+      }
     } catch (err) {
       console.log(err);
     }
