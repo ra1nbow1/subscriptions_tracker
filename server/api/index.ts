@@ -4,12 +4,14 @@ import dotenv from 'dotenv';
 import { connectToDatabase } from './db-connection';
 import bodyParser from 'body-parser';
 import cookieParser from "cookie-parser"
+import cors from 'cors'
 
 
 dotenv.config()
 connectToDatabase()
 const app = express()
 
+app.use(cors());
 app.use(express.json())
 app.use('/', userRoutes())
 app.use(bodyParser.json())

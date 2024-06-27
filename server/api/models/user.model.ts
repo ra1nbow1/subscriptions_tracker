@@ -4,7 +4,7 @@ interface ISubscription {
     title: string,
     price: number,
     renewalPeriod: string,
-    startDate: Date
+    startDate: number
 }
 
 export interface IUser extends Document {
@@ -61,7 +61,7 @@ const UserSchema = new Schema(
                     title: { type: Schema.Types.String, required: true },
                     price: { type: Schema.Types.Number, required: true },
                     renewalPeriod: { type: Schema.Types.String, required: true },
-                    startDate: { type: Schema.Types.Date, required: true }
+                    startDate: { type: Schema.Types.Number, required: true }
                 }
             ],
             required: false,

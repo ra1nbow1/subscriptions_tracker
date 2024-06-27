@@ -51,7 +51,6 @@ const loginUser = async (req: Request, res: Response): Promise<Response> => {
 
     try {
         const user: IUser = await User.findOne({ email }) as IUser;
-
         if (!user) {
             return res.status(401).json({ message: "Неверные учетные данные" });
         }
@@ -81,11 +80,9 @@ const getUserData = async (req: Request, res: Response): Promise<Response> => {
 
     try {
         const decoded: any = jwt.verify(token, secretKey);
-        console.log(decoded);
         const uid = decoded.uid;
 
         const user: IUser = await User.findOne({ uid: uid }).select('-password') as IUser; // Исключить поле password из результата
-        console.log(user);
         if (!user) {
             return res.status(404).json({ message: "Пользователь не найден" });
         }
@@ -108,7 +105,6 @@ const updateSubscriptions = async (req: Request, res: Response): Promise<Respons
             { subscriptions: subscriptions },
             { new: true }
         );
-        console.log(updatedUser)
         if (!updatedUser) {
             return res.status(404).json({ message: 'Пользователь не найден' });
         }
