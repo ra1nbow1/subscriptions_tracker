@@ -1,56 +1,31 @@
 import React, { ReactNode } from 'react';
 import { ISubscription } from '../../../features/interfaces/user.interface';
-import Card from '@mui/material/Card';
-import Box from '@mui/material/Box';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Unstable_Grid2';
-import styles from './Subscriptions.module.scss'
+import Subscription from './Subscription';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSquarePlus } from '@fortawesome/free-solid-svg-icons';
+
 
 interface ISubscriptionProps {
   subscriptions: ISubscription[];
 }
 
-const bull = (
-  <Box
-    component="span"
-    sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
-  >
-    •
-  </Box>
-);
 
 function Subscriptions({ subscriptions }: Readonly<ISubscriptionProps>): JSX.Element {
-  function convertToHumanTimestamp(date: number): string {
-    const obj = new Date(date)
-    console.log(`${obj.toLocaleDateString()} ${obj.toLocaleTimeString()}`);
-    return `${obj.toLocaleDateString()} ${obj.toLocaleTimeString()}`;
+  const newSubscription = () => {
+    console.log('New');
   }
   return (
-    <Grid container rowSpacing={10} columnSpacing={{ xs: 5, sm: 5, md: 5 }}>
-        {subscriptions.map((subscription) => {
-          return (
-            <Card key={subscription.title} sx={{ minWidth: 275 }}>
-              <CardContent>
-                <Typography variant="h5" component="div" color="text.primary">
-                  {subscription.title}
-                </Typography>
-                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                  Каждый {subscription.renewalPeriod}
-                </Typography>
-                <Typography variant="body2">
-                {subscription.price}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button size="small">Изменить</Button>
-              </CardActions>
-            </Card>
-          )
-        })}
-    </Grid>
+    <div className="container mx-auto p-4 min-h-fit">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {subscriptions.map((subscription) => (
+          <Subscription key={subscription.title} subscription={subscription} />
+        ))}
+        <div onClick={newSubscription} className="bg-gray-800 p-4 rounded-lg shadow-md flex flex-col items-center justify-center text-center cursor-pointer hover:bg-gray-700 transition-colors duration-200">
+          <FontAwesomeIcon icon={faSquarePlus} size="2xl" className='mb-1'/>
+          <div className='text-3xl font-bold mb-4'>Добавить</div>
+        </div>
+      </div>
+    </div>
   );
 }
 

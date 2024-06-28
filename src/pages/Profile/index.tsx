@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../store';
-import { logout } from '../../features/auth/authSlice';
+import { logout, setToken } from '../../features/auth/authSlice';
 import axios from '../../features/auth/axios';
 import IUser from '../../features/interfaces/user.interface';
 import Subscriptions from './components/Subscriptions';
-import styles from './Profile.module.scss'
+import Header from './components/Header';
+import { useNavigate } from 'react-router-dom';
 
 function Profile() {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const { token } = useSelector((state: RootState) => state.auth);
-  const [user, setUser] = useState<IUser>({
+  const [user, setUserState] = useState<IUser>({
     uid: '',
     first_name: '',
     last_name: '',
@@ -26,28 +28,36 @@ function Profile() {
         const response = await axios.get('/api/user', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setUser(response.data);
-        console.log('User:', response.data);
+        setUserState(response.data);
       } catch (error) {
         console.error('Error fetching user:', error);
+        dispatch(logout());
+        navigate('/login');
       }
     };
 
     if (token) {
       fetchUser();
+    } else {
+      navigate('/login');
     }
-  }, [token]);
+  }, [token, dispatch, history]);
 
   const handleLogout = () => {
     dispatch(logout());
+    navigate('/login');
   };
 
   return (
-    <section className={styles.wrapper}>
-      <div className="uid">{user.uid}</div>
-      <Subscriptions subscriptions={user.subscriptions}/>
-    </section>
+    <>
+      <header>
+        <Header user={user} />
+      </header>
+      <section className="subscriptions h-screen">
+        <Subscriptions subscriptions={user.subscriptions} />
+      </section>
+    </>
   );
-};
+}
 
 export default Profile;

@@ -1,4 +1,3 @@
-// src/features/auth/authSlice.ts
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from './axios';
 
@@ -9,7 +8,7 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  token: null,
+  token: localStorage.getItem('token'),
   status: 'idle',
   error: null,
 };
@@ -44,6 +43,10 @@ const authSlice = createSlice({
   reducers: {
     logout(state) {
       state.token = null;
+      localStorage.removeItem('token');
+    },
+    setToken(state, action: PayloadAction<string | null>) {
+      state.token = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -54,8 +57,9 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action: PayloadAction<string>) => {
         state.status = 'succeeded';
         state.token = action.payload;
+        localStorage.setItem('token', action.payload);
       })
-      .addCase(loginUser.rejected, (state, action: PayloadAction<any>) => {
+      .addCase(loginUser.rejected, (state, action: PayloadAction<string | null>) => {
         state.status = 'failed';
         state.error = action.payload;
       })
@@ -65,14 +69,15 @@ const authSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action: PayloadAction<string>) => {
         state.status = 'succeeded';
         state.token = action.payload;
+        localStorage.setItem('token', action.payload);
       })
-      .addCase(registerUser.rejected, (state, action: PayloadAction<any>) => {
+      .addCase(registerUser.rejected, (state, action: PayloadAction<string | null>) => {
         state.status = 'failed';
         state.error = action.payload;
       });
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, setToken } = authSlice.actions;
 
 export default authSlice.reducer;
