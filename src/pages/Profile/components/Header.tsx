@@ -1,9 +1,10 @@
 import React from 'react';
-import IUser from '../../../features/interfaces/user.interface';
+import IUser, { ISubscription } from '../../../features/interfaces/user.interface';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../features/auth/authSlice';
+import { AppDispatch } from '../../../store';
 
 interface IHeaderProps {
     user: IUser;
@@ -13,7 +14,32 @@ function Header({user}: Readonly<IHeaderProps>){
   const subscriptions = user['subscriptions']
   const dispatch = useDispatch<AppDispatch>();
 
-  const totalSpend = subscriptions.reduce((total, subscription) => total + subscription.price, 0);
+  const calculateTotalExpenses = (subscriptions: ISubscription[]): number => {
+    const now = Date.now();
+
+    return subscriptions.reduce((total, subscription) => {
+      const { price, renewalPeriod, startDate } = subscription;
+      const start = new Date(startDate);
+      const end = new Date(now);
+
+      let periods = 0;
+
+      if (renewalPeriod === 'месяц') {
+        const monthsDiff = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+        periods = monthsDiff;
+      } else if (renewalPeriod === 'год') {
+        const yearsDiff = end.getFullYear() - start.getFullYear();
+        periods = yearsDiff;
+      }
+
+      if (end > start) {
+        total += price * (periods + 1);
+      }
+
+      return total;
+    }, 0);
+  };
+
   const monthlySpend = subscriptions.reduce((total, subscription) => {
     if (subscription.renewalPeriod.toLowerCase() === 'месяц') {
       return total + subscription.price;
@@ -35,7 +61,7 @@ function Header({user}: Readonly<IHeaderProps>){
             </button>
         </div>
         <div className="text-right">
-          <p>Потрачено всего: ~{totalSpend.toFixed(2)}₽</p>
+          <p>Потрачено всего: ~{calculateTotalExpenses(subscriptions).toFixed(2)}₽</p>
           <p>В месяц: ~{monthlySpend.toFixed(2)}₽</p>
         </div>
       </div>
