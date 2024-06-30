@@ -9,7 +9,7 @@ interface ISubscriptionProps {
 function Subscription({subscription}: Readonly<ISubscriptionProps>) {
     function convertToHumanTimestamp(date: number): string {
         const obj = new Date(date)
-        return `${obj.toLocaleDateString()} ${obj.toLocaleTimeString()}`;
+        return `${obj.toLocaleDateString()}`;
     }
   return (
     <div key={subscription.title} className="bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">

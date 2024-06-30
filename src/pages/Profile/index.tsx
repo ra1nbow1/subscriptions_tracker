@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../../store';
-import { logout, setToken } from '../../features/auth/authSlice';
+import { logout } from '../../features/auth/authSlice';
 import axios from '../../features/auth/axios';
 import IUser from '../../features/interfaces/user.interface';
 import Subscriptions from './components/Subscriptions';
@@ -53,8 +53,8 @@ function Profile() {
       <header>
         <Header user={user} />
       </header>
-      <section className="subscriptions h-screen">
-        <Subscriptions subscriptions={user.subscriptions} />
+      <section className="subscriptions h-fit">
+        <Subscriptions subscriptions={user.subscriptions} uid={user.uid}/>
       </section>
     </>
   );

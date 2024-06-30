@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import { ISubscription } from '../../../features/interfaces/user.interface';
+import IUser, { ISubscription } from '../../../features/interfaces/user.interface';
 import Subscription from './Subscription';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquarePlus, faClose } from '@fortawesome/free-solid-svg-icons';
+import axios from '../../../features/auth/axios';
 
 
 interface ISubscriptionProps {
   subscriptions: ISubscription[];
+  uid: IUser['uid']
 }
 
 
-function Subscriptions({ subscriptions }: Readonly<ISubscriptionProps>): JSX.Element {
+function Subscriptions({ subscriptions, uid }: Readonly<ISubscriptionProps>): JSX.Element {
   const [isAddingNewSubscription, setIsAddingNewSubscription] = useState(false)
   const [alertIsOpened, setAlertIsOpened] = useState(false)
   const [title, setTitle] = useState<ISubscription['title']>('')
@@ -23,6 +25,21 @@ function Subscriptions({ subscriptions }: Readonly<ISubscriptionProps>): JSX.Ele
       setAlertIsOpened(true)
       setTimeout(() => setAlertIsOpened(false), 3000)
     }
+    else {
+      axios.put(`/api/${uid}/subscriptions`,
+        {
+          subscriptions: [...subscriptions, {
+            "title": title,
+            "price": price,
+            "renewalPeriod": renewalPeriod,
+            "startDate": startDate,
+        }]
+        }
+      ).then(() => window.location.reload())
+      .catch(() => {
+        alert('Ошибка')
+      })
+    }
   }
   return (
     <>
@@ -32,10 +49,10 @@ function Subscriptions({ subscriptions }: Readonly<ISubscriptionProps>): JSX.Ele
           <Subscription key={subscription.title} subscription={subscription} />
         ))}
         {!isAddingNewSubscription ?
-          <div onClick={() => {setIsAddingNewSubscription(true)}} className="bg-gray-800 p-4 rounded-lg shadow-md flex flex-col items-center justify-center text-center cursor-pointer hover:bg-gray-700 transition-colors duration-200">
+          <button onClick={() => {setIsAddingNewSubscription(true)}} className="bg-gray-800 p-4 rounded-lg shadow-md flex flex-col items-center justify-center text-center cursor-pointer hover:bg-gray-700 transition-colors duration-200">
             <FontAwesomeIcon icon={faSquarePlus} size="2xl" className='mb-1'/>
             <div className='text-3xl font-bold mb-4'>Добавить</div>
-          </div> :
+          </button> :
           <div className="bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
             <input
                   type="text"
@@ -85,7 +102,7 @@ function Subscriptions({ subscriptions }: Readonly<ISubscriptionProps>): JSX.Ele
     { alertIsOpened &&
       <div className="bg-red-100 text-red-700 mx-auto w-52 py-3 px-2 text-center align-center flex justify-between rounded" role="alert">
         <span className="block sm:inline">Заполните все поля</span>
-        <FontAwesomeIcon onClick={() => setAlertIsOpened(false)} icon={faClose} size="xl"/>
+        <FontAwesomeIcon onClick={() => setAlertIsOpened(false)} icon={faClose} size="xl" className="cursor-pointer"/>
       </div>
     }
     </>
