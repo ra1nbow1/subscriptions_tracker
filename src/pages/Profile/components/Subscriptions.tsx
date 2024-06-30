@@ -16,7 +16,7 @@ function Subscriptions({ subscriptions, uid }: Readonly<ISubscriptionProps>): JS
   const [isAddingNewSubscription, setIsAddingNewSubscription] = useState(false)
   const [alertIsOpened, setAlertIsOpened] = useState(false)
   const [title, setTitle] = useState<ISubscription['title']>('')
-  const [renewalPeriod, setRenewalPeriod] = useState<ISubscription['renewalPeriod']>('')
+  const [renewalPeriod, setRenewalPeriod] = useState<ISubscription['renewalPeriod'] | ''>('')
   const [price, setPrice] = useState<ISubscription['price']>(0)
   const [startDate, setStartDate] = useState<ISubscription['startDate']>(0)
 

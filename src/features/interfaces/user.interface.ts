@@ -1,7 +1,7 @@
 export interface ISubscription {
     title: string,
     price: number,
-    renewalPeriod: string,
+    renewalPeriod: 'месяц' | 'год',
     startDate: number
 }
 

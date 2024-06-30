@@ -53,7 +53,7 @@ function Profile() {
       <header>
         <Header user={user} />
       </header>
-      <section className="subscriptions h-fit">
+      <section className="subscriptions h-fit min-h-screen">
         <Subscriptions subscriptions={user.subscriptions} uid={user.uid}/>
       </section>
     </>
