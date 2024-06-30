@@ -43,11 +43,6 @@ function Profile() {
     }
   }, [token, dispatch, history]);
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate('/login');
-  };
-
   return (
     <>
       <header>

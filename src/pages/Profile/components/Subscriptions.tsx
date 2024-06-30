@@ -49,7 +49,7 @@ function Subscriptions({ subscriptions, uid }: Readonly<ISubscriptionProps>): JS
           <Subscription key={subscription.title} subscription={subscription} />
         ))}
         {!isAddingNewSubscription ?
-          <button onClick={() => {setIsAddingNewSubscription(true)}} className="bg-gray-800 p-4 rounded-lg shadow-md flex flex-col items-center justify-center text-center cursor-pointer hover:bg-gray-700 transition-colors duration-200">
+          <button onClick={() => {setIsAddingNewSubscription(true)}} className="bg-gray-800 p-4 h-60 rounded-lg shadow-md flex flex-col items-center justify-center text-center cursor-pointer hover:bg-gray-700 transition-colors duration-200">
             <FontAwesomeIcon icon={faSquarePlus} size="2xl" className='mb-1'/>
             <div className='text-3xl font-bold mb-4'>Добавить</div>
           </button> :
@@ -65,9 +65,9 @@ function Subscriptions({ subscriptions, uid }: Readonly<ISubscriptionProps>): JS
                   required
                 />
             <select
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setRenewalPeriod(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setRenewalPeriod(e.target.value as 'месяц' | 'год')}
               className="w-full outline-none py-1 px-3 mb-2 bg-transparent sm:text-sm sm:leading-4 text-gray-400 border-2 border-blue-800 focus:border-blue-600 rounded-md focus:text-white appearance-none focus:shadow-outline">
-              <option value="месяц">Каждый месяц</option>
+              <option value="месяц" selected>Каждый месяц</option>
               <option value="год">Каждый год</option>
             </select>
             <div className="relative rounded-md shadow-sm">
@@ -75,7 +75,7 @@ function Subscriptions({ subscriptions, uid }: Readonly<ISubscriptionProps>): JS
                 <span className="text-gray-500 sm:text-sm">₽</span>
               </div>
               <input
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPrice(parseFloat(e.target.value))}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPrice(parseInt(e.target.value))}
                 type="number"
                 name="price"
                 id="price"

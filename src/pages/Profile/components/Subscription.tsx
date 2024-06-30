@@ -1,4 +1,3 @@
-import React from 'react'
 import { ISubscription } from '../../../features/interfaces/user.interface';
 
 interface ISubscriptionProps {
@@ -12,7 +11,7 @@ function Subscription({subscription}: Readonly<ISubscriptionProps>) {
         return `${obj.toLocaleDateString()}`;
     }
   return (
-    <div key={subscription.title} className="bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+    <div key={subscription.title} className="bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 h-60">
       <h2 className="text-2xl font-bold mb-4">{subscription.title}</h2>
       <p className="mb-2">Каждый {subscription.renewalPeriod}</p>
       <p className="mb-4">{subscription.price}₽</p>

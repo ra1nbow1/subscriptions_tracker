@@ -1,4 +1,3 @@
-import React from 'react';
 import IUser, { ISubscription } from '../../../features/interfaces/user.interface';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
