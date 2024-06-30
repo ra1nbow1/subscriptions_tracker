@@ -33,6 +33,7 @@ function Subscriptions({ subscriptions, uid }: Readonly<ISubscriptionProps>): JS
             "price": price,
             "renewalPeriod": renewalPeriod,
             "startDate": startDate,
+            "sid": (Math.floor(Math.random()*90000) + 10000).toString()
         }]
         }
       ).then(() => window.location.reload())
@@ -46,7 +47,7 @@ function Subscriptions({ subscriptions, uid }: Readonly<ISubscriptionProps>): JS
     <div className="container mx-auto p-4 min-h-fit">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {subscriptions.map((subscription) => (
-          <Subscription key={subscription.title} subscription={subscription} />
+          <Subscription key={subscription.sid} subscription={subscription} />
         ))}
         {!isAddingNewSubscription ?
           <button onClick={() => {setIsAddingNewSubscription(true)}} className="bg-gray-800 p-4 h-60 rounded-lg shadow-md flex flex-col items-center justify-center text-center cursor-pointer hover:bg-gray-700 transition-colors duration-200">
@@ -67,7 +68,7 @@ function Subscriptions({ subscriptions, uid }: Readonly<ISubscriptionProps>): JS
             <select
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setRenewalPeriod(e.target.value as 'месяц' | 'год')}
               className="w-full outline-none py-1 px-3 mb-2 bg-transparent sm:text-sm sm:leading-4 text-gray-400 border-2 border-blue-800 focus:border-blue-600 rounded-md focus:text-white appearance-none focus:shadow-outline">
-              <option value="месяц" selected>Каждый месяц</option>
+              <option value="месяц" defaultValue={'месяц'}>Каждый месяц</option>
               <option value="год">Каждый год</option>
             </select>
             <div className="relative rounded-md shadow-sm">
@@ -100,7 +101,7 @@ function Subscriptions({ subscriptions, uid }: Readonly<ISubscriptionProps>): JS
 
     </div>
     { alertIsOpened &&
-      <div className="bg-red-100 text-red-700 mx-auto w-52 py-3 px-2 text-center align-center flex justify-between rounded" role="alert">
+      <div className="bg-red-100 text-red-700 w-52 py-3 px-2 text-center align-center flex justify-between rounded fixed bottom-5 right-5" role="alert">
         <span className="block sm:inline">Заполните все поля</span>
         <FontAwesomeIcon onClick={() => setAlertIsOpened(false)} icon={faClose} size="xl" className="cursor-pointer"/>
       </div>

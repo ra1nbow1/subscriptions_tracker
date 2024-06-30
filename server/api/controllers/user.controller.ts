@@ -97,7 +97,7 @@ const getUserData = async (req: Request, res: Response): Promise<Response> => {
 // Ообновление подписок пользователя
 const updateSubscriptions = async (req: Request, res: Response): Promise<Response<any, Record<string, IUser>>> => {
     const { uid } = req.params;
-    const { subscriptions } = req.body; // req.body = { subscriptions: [{}, {}, {}] }
+    const { subscriptions } = req.body;
 
     try {
         const updatedUser: IUser | null = await User.findOneAndUpdate(
