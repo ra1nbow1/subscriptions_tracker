@@ -51,15 +51,15 @@ function Header({user}: Readonly<IHeaderProps>){
   const handleLogout = () => {dispatch(logout())}
 
   return (
-    <header className="bg-gray-800 text-white mx-auto p-4 shadow-lg">
+    <header className="bg-gray-800 text-white p-4 shadow-lg">
       <div className="container mx-auto flex justify-between items-center">
-        <div className='flex flex-row'>
+        <div className='flex flex-row ml-4'>
           <h1 className="text-2xl font-bold">{user?.first_name} {user?.last_name}</h1>
           <button onClick={handleLogout} className="ml-4 text-white bg-blue-600 px-4 py-2 rounded hover:bg-blue-800 transition-colors duration-300">
             <FontAwesomeIcon icon={faSignOutAlt} size="lg" /> Выйти
             </button>
         </div>
-        <div className="text-right">
+        <div className="text-right mr-4">
           <p>Потрачено всего: ~{calculateTotalExpenses(subscriptions).toFixed(2)}₽</p>
           <p>В месяц: ~{monthlySpend.toFixed(2)}₽</p>
         </div>

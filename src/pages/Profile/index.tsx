@@ -12,7 +12,7 @@ function Profile() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { token } = useSelector((state: RootState) => state.auth);
-  const [user, setUserState] = useState<IUser>({
+  const [user, setUser] = useState<IUser>({
     uid: '',
     first_name: '',
     last_name: '',
@@ -28,7 +28,7 @@ function Profile() {
         const response = await axios.get('/api/user', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setUserState(response.data);
+        setUser(response.data);
       } catch (error) {
         console.error('Error fetching user:', error);
         dispatch(logout());
