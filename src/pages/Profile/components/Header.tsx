@@ -32,7 +32,7 @@ function Header({user}: Readonly<IHeaderProps>){
       }
 
       if (end > start) {
-        total += price * (periods + 1);
+        total += price * (periods);
       }
 
       return total;
