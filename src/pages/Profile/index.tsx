@@ -7,6 +7,7 @@ import IUser from '../../features/interfaces/user.interface'
 import Subscriptions from './components/Subscriptions'
 import Header from './components/Header'
 import { useNavigate } from 'react-router-dom'
+import { Helmet } from "react-helmet"
 
 function Profile() {
 	const dispatch = useDispatch<AppDispatch>()
@@ -45,9 +46,13 @@ function Profile() {
 
 	return (
 		<>
+			<Helmet>
+				<title>Подписки • {user.first_name} {user.last_name}</title>
+			</Helmet>
 			<header>
 				<Header user={user} />
 			</header>
+
 			<section className="subscriptions h-fit min-h-screen">
 				<Subscriptions
 					subscriptions={user.subscriptions}

@@ -4,6 +4,7 @@ import { AppDispatch } from '../../store'
 import { registerUser } from '../../features/auth/authSlice'
 import { useNavigate } from 'react-router-dom'
 import IUser from '../../features/interfaces/user.interface'
+import { Helmet } from "react-helmet"
 
 function Register() {
 	const dispatch = useDispatch<AppDispatch>()
@@ -96,11 +97,11 @@ function Register() {
 					</button>
 				</form>
 				<div className="flex flex-col mt-3 justify-center text-center">
-					Уже есть аккаунт?
-					<a href="login" className="text-blue-600 hover:underline">
-						Войти
-					</a>
+					Уже есть аккаунт?<a href="login" className="text-blue-600 hover:underline">Войти</a>
 				</div>
+				<Helmet>
+					<title>Трекер подписок • Регистрация</title>
+				</Helmet>
 			</div>
 		</div>
 	)
