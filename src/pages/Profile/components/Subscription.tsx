@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ISubscription } from '../../../features/interfaces/user.interface';
+import axios from '../../../features/auth/axios'
 
 interface ISubscriptionProps {
     subscription: ISubscription;
@@ -27,7 +28,14 @@ function Subscription({subscription}: Readonly<ISubscriptionProps>) {
   }
 
   const deleteSubscription = () => {
-    console.log(`Delete ${subscription.sid}`);
+    const token = localStorage.getItem('token')
+    axios.post('/api/delete', {
+      sid: subscription.sid
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then(() => window.location.reload())
   }
 
   return (
