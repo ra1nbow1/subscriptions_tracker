@@ -20,7 +20,7 @@ function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-900">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900">
       <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-3xl font-bold text-white mb-8 text-center">Вход</h2>
         <form onSubmit={handleSubmit}>
@@ -53,7 +53,12 @@ function Login() {
             Войти
           </button>
         </form>
+        <div className='flex flex-col mt-3 justify-center text-center'>
+          Нет аккаунта?
+          <a href="register" className='text-blue-600 hover:underline'>Зарегистрироваться</a>
+        </div>
       </div>
+
     </div>
   );
 };

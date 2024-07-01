@@ -80,6 +80,10 @@ function Register() {
             Зарегистрироваться
           </button>
         </form>
+        <div className='flex flex-col mt-3 justify-center text-center'>
+          Уже есть аккаунт?
+          <a href="login" className='text-blue-600 hover:underline'>Войти</a>
+        </div>
       </div>
     </div>
   );
