@@ -1,3 +1,4 @@
+import { ISubscription } from './../../../src/features/interfaces/user.interface';
 import { Request, Response } from 'express';
 import { User, IUser } from '../models/user.model';
 import jwt from 'jsonwebtoken';
@@ -140,4 +141,38 @@ const deleteSubscription = async (req: Request, res: Response): Promise<Response
     }
 }
 
-export { registerUser, loginUser, getUserData, addSubscription, deleteSubscription };
+const editSubscription = async (req: Request, res: Response): Promise<Response<any, Record<string, IUser>>> => {
+    const token = req.headers.authorization?.split(' ')[1];
+    const { sid, title, renewalPeriod, price, startDate } = req.body;
+
+    if (!token) {
+      return res.status(401).json({ message: "Пожалуйста, войдите в систему" });
+    }
+
+    try {
+      const decoded: any = jwt.verify(token, secretKey);
+      const uid = decoded.uid;
+
+      const user: IUser | null = await User.findOne({ uid: uid }) as IUser;
+      if (!user) {
+        return res.status(404).json({ message: "Пользователь не найден" });
+      }
+
+      const newSubscriptions = user.subscriptions.map((subscription) =>
+        subscription.sid === sid
+          ? { ...subscription, title, renewalPeriod, price, startDate }
+          : subscription
+      );
+
+      user.subscriptions = newSubscriptions;
+      await user.save();
+
+      return res.status(200).json(user);
+
+    } catch (err) {
+      console.error("Ошибка при редактировании подписки", err);
+      return res.status(500).json({ message: "Ошибка при редактировании подписки" });
+    }
+  };
+
+export { registerUser, loginUser, getUserData, addSubscription, deleteSubscription, editSubscription };
