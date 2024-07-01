@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState, AppDispatch } from '../../store'
 import { logout } from '../../features/auth/authSlice'
@@ -7,7 +7,7 @@ import IUser from '../../features/interfaces/user.interface'
 import Subscriptions from './components/Subscriptions'
 import Header from './components/Header'
 import { useNavigate } from 'react-router-dom'
-import { Helmet } from "react-helmet"
+import { Helmet } from 'react-helmet'
 
 function Profile() {
 	const dispatch = useDispatch<AppDispatch>()
@@ -47,7 +47,9 @@ function Profile() {
 	return (
 		<>
 			<Helmet>
-				<title>Подписки • {user.first_name} {user.last_name}</title>
+				<title>
+					Подписки • {user.first_name} {user.last_name}
+				</title>
 			</Helmet>
 			<header>
 				<Header user={user} />

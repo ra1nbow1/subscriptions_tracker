@@ -64,7 +64,13 @@ function Login() {
 					</button>
 				</form>
 				<div className="flex flex-col mt-3 justify-center text-center">
-					Нет аккаунта?<a href="register" className="text-blue-600 hover:underline"> Зарегистрироваться </a>
+					Нет аккаунта?
+					<a
+						href="register"
+						className="text-blue-600 hover:underline">
+						{' '}
+						Зарегистрироваться{' '}
+					</a>
 				</div>
 			</div>
 			<Helmet>

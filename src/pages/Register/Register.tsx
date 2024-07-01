@@ -4,7 +4,7 @@ import { AppDispatch } from '../../store'
 import { registerUser } from '../../features/auth/authSlice'
 import { useNavigate } from 'react-router-dom'
 import IUser from '../../features/interfaces/user.interface'
-import { Helmet } from "react-helmet"
+import { Helmet } from 'react-helmet'
 
 function Register() {
 	const dispatch = useDispatch<AppDispatch>()
@@ -35,8 +35,7 @@ function Register() {
 					<div className="mb-4">
 						<label className="block text-sm font-medium text-gray-300 mb-2">
 							Имя
-						</label>
-						<input
+							<input
 							autoComplete="given-name"
 							id="first_name"
 							className="w-full p-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -44,19 +43,21 @@ function Register() {
 							onChange={(e) => setFirst_name(e.target.value)}
 							required
 						/>
+						</label>
+
 					</div>
 					<div className="mb-4">
 						<label className="block text-sm font-medium text-gray-300 mb-2">
 							Фамилия
+							<input
+								autoComplete="family-name"
+								id="last_name"
+								className="w-full p-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+								value={last_name}
+								onChange={(e) => setLast_name(e.target.value)}
+								required
+							/>
 						</label>
-						<input
-							autoComplete="family-name"
-							id="last_name"
-							className="w-full p-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
-							value={last_name}
-							onChange={(e) => setLast_name(e.target.value)}
-							required
-						/>
 					</div>
 					<div className="mb-4">
 						<label
@@ -97,7 +98,10 @@ function Register() {
 					</button>
 				</form>
 				<div className="flex flex-col mt-3 justify-center text-center">
-					Уже есть аккаунт?<a href="login" className="text-blue-600 hover:underline">Войти</a>
+					Уже есть аккаунт?
+					<a href="login" className="text-blue-600 hover:underline">
+						Войти
+					</a>
 				</div>
 				<Helmet>
 					<title>Трекер подписок • Регистрация</title>
