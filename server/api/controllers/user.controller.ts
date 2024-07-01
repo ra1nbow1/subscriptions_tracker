@@ -1,6 +1,5 @@
-import { ISubscription } from './../../../src/features/interfaces/user.interface';
 import { Request, Response } from 'express';
-import { User, IUser } from '../models/user.model';
+import { User, IUser, ISubscription } from '../models/user.model';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv'
@@ -10,14 +9,14 @@ const secretKey: string = process.env.TOKEN_KEY as string; // Замените �
 
 // Регистрация пользователя
 const registerUser = async (req: Request, res: Response): Promise<Response> => {
-    const { first_name, last_name, email, password } = req.body;
+    const { first_name, last_name, email, password }: IUser = req.body;
 
     if (!first_name || !last_name || !email || !password) {
         return res.status(422).json({ message: "Заполните все поля" });
     }
 
     try {
-        const existingUser = await User.findOne({ email });
+        const existingUser: IUser | null = await User.findOne({ email });
 
         if (existingUser) {
             return res.status(409).json({ message: "Пользователь с таким email уже существует" });
@@ -44,7 +43,7 @@ const registerUser = async (req: Request, res: Response): Promise<Response> => {
 
 // Вход пользователя
 const loginUser = async (req: Request, res: Response): Promise<Response> => {
-    const { email, password } = req.body;
+    const { email, password }: IUser = req.body;
 
     if (!email || !password) {
         return res.status(422).json({ message: "Заполните все поля" });
@@ -62,7 +61,7 @@ const loginUser = async (req: Request, res: Response): Promise<Response> => {
             return res.status(401).json({ message: "Неверные учетные данные" });
         }
 
-        const token = jwt.sign({ uid: user.uid }, secretKey, { expiresIn: '1h' });
+        const token: IUser['token'] = jwt.sign({ uid: user.uid }, secretKey, { expiresIn: '1h' });
         return res.status(200).json({ token });
     } catch (err) {
         console.error("Ошибка при входе пользователя:", err);
@@ -73,7 +72,7 @@ const loginUser = async (req: Request, res: Response): Promise<Response> => {
 
 // Получение данных пользователя
 const getUserData = async (req: Request, res: Response): Promise<Response> => {
-    const token = req.headers.authorization?.split(' ')[1];
+    const token: IUser['token'] | undefined = req.headers.authorization?.split(' ')[1];
 
     if (!token) {
         return res.status(401).json({ message: "Пожалуйста, войдите в систему" });
@@ -81,9 +80,9 @@ const getUserData = async (req: Request, res: Response): Promise<Response> => {
 
     try {
         const decoded: any = jwt.verify(token, secretKey);
-        const uid = decoded.uid;
+        const uid: IUser['uid'] = decoded.uid;
 
-        const user: IUser = await User.findOne({ uid: uid }).select('-password') as IUser; // Исключить поле password из результата
+        const user: IUser | null = await User.findOne({ uid: uid }).select('-password') as IUser; // Исключить поле password из результата
         if (!user) {
             return res.status(404).json({ message: "Пользователь не найден" });
         }
@@ -95,10 +94,10 @@ const getUserData = async (req: Request, res: Response): Promise<Response> => {
     }
 };
 
-// Ообновление подписок пользователя
+// Добавление подписки пользователю
 const addSubscription = async (req: Request, res: Response): Promise<Response<any, Record<string, IUser>>> => {
     const { uid } = req.params;
-    const { subscriptions } = req.body;
+    const { subscriptions }: { subscriptions: ISubscription[]} = req.body;
 
     try {
         const updatedUser: IUser | null = await User.findOneAndUpdate(
@@ -117,9 +116,10 @@ const addSubscription = async (req: Request, res: Response): Promise<Response<an
     }
 };
 
+// Удаление подписки пользователя
 const deleteSubscription = async (req: Request, res: Response): Promise<Response<any, Record<string, IUser>>> => {
-    const token = req.headers.authorization?.split(' ')[1];
-    const { sid } = req.body
+    const token: IUser['token'] = req.headers.authorization?.split(' ')[1] as IUser['token'];
+    const { sid }: { sid: ISubscription['sid']} = req.body
 
     if (!token) {
         return res.status(401).json({ message: "Пожалуйста, войдите в систему" });
@@ -127,10 +127,10 @@ const deleteSubscription = async (req: Request, res: Response): Promise<Response
 
     try {
         const decoded: any = jwt.verify(token, secretKey);
-        const uid = decoded.uid;
+        const uid: IUser['uid'] = decoded.uid;
 
-        const user: IUser = await User.findOne({ uid: uid }) as IUser
-        const newSubscriptions = user.subscriptions.filter(sub => sub['sid'] != sid)
+        const user: IUser | null = await User.findOne({ uid: uid }) as IUser
+        const newSubscriptions: ISubscription[] = user.subscriptions.filter(sub => sub['sid'] != sid)
         await User.updateOne({uid: uid}, {subscriptions: newSubscriptions})
 
         return res.status(200).json(user);
@@ -141,9 +141,10 @@ const deleteSubscription = async (req: Request, res: Response): Promise<Response
     }
 }
 
+// Изменение подписки пользователя
 const editSubscription = async (req: Request, res: Response): Promise<Response<any, Record<string, IUser>>> => {
-    const token = req.headers.authorization?.split(' ')[1];
-    const { sid, title, renewalPeriod, price, startDate } = req.body;
+    const token: IUser['token'] | undefined = req.headers.authorization?.split(' ')[1];
+    const { sid, title, renewalPeriod, price, startDate }: ISubscription = req.body;
 
     if (!token) {
       return res.status(401).json({ message: "Пожалуйста, войдите в систему" });
@@ -151,14 +152,14 @@ const editSubscription = async (req: Request, res: Response): Promise<Response<a
 
     try {
       const decoded: any = jwt.verify(token, secretKey);
-      const uid = decoded.uid;
+      const uid: IUser['uid'] = decoded.uid;
 
       const user: IUser | null = await User.findOne({ uid: uid }) as IUser;
       if (!user) {
         return res.status(404).json({ message: "Пользователь не найден" });
       }
 
-      const newSubscriptions = user.subscriptions.map((subscription) =>
+      const newSubscriptions: ISubscription[] = user.subscriptions.map((subscription) =>
         subscription.sid === sid
           ? { ...subscription, title, renewalPeriod, price, startDate }
           : subscription

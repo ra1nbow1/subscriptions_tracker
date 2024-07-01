@@ -1,6 +1,6 @@
 import mongoose, { Schema, Model, Document } from 'mongoose';
 
-interface ISubscription {
+export interface ISubscription {
     title: string,
     price: number,
     renewalPeriod: string,
