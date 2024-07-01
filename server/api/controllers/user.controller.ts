@@ -95,7 +95,7 @@ const getUserData = async (req: Request, res: Response): Promise<Response> => {
 };
 
 // Ообновление подписок пользователя
-const updateSubscriptions = async (req: Request, res: Response): Promise<Response<any, Record<string, IUser>>> => {
+const addSubscription = async (req: Request, res: Response): Promise<Response<any, Record<string, IUser>>> => {
     const { uid } = req.params;
     const { subscriptions } = req.body;
 
@@ -116,4 +116,28 @@ const updateSubscriptions = async (req: Request, res: Response): Promise<Respons
     }
 };
 
-export { registerUser, loginUser, getUserData, updateSubscriptions };
+const deleteSubscription = async (req: Request, res: Response): Promise<Response<any, Record<string, IUser>>> => {
+    const token = req.headers.authorization?.split(' ')[1];
+    const { sid } = req.body
+
+    if (!token) {
+        return res.status(401).json({ message: "Пожалуйста, войдите в систему" });
+    }
+
+    try {
+        const decoded: any = jwt.verify(token, secretKey);
+        const uid = decoded.uid;
+
+        const user: IUser = await User.findOne({ uid: uid }) as IUser
+        const newSubscriptions = user.subscriptions.filter(sub => sub['sid'] != sid)
+        await User.updateOne({uid: uid}, {subscriptions: newSubscriptions})
+
+        return res.status(200).json(user);
+
+    } catch (err) {
+        console.error("Ошибка при удалении подписки", err);
+        return res.status(500).json({ message: "Ошибка при удалении подписки" });
+    }
+}
+
+export { registerUser, loginUser, getUserData, addSubscription, deleteSubscription };

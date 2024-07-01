@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { registerUser, loginUser, getUserData, updateSubscriptions } from '../controllers/user.controller';
+import { registerUser, loginUser, getUserData, addSubscription, deleteSubscription } from '../controllers/user.controller';
 
 const userRoutes = (): Router => {
     const router = Router()
@@ -10,7 +10,9 @@ const userRoutes = (): Router => {
 
     router.get('/api/user', getUserData as any)
 
-    router.put('/api/:uid/subscriptions', updateSubscriptions);
+    router.put('/api/:uid/subscriptions', addSubscription);
+
+    router.post('/api/delete', deleteSubscription)
 
     return router
 };
