@@ -38,6 +38,21 @@ function Subscription({subscription}: Readonly<ISubscriptionProps>) {
     .then(() => window.location.reload())
   }
 
+  const saveEditedSubscription = () => {
+    const token = localStorage.getItem('token')
+    axios.post('/api/edit', {
+      sid: subscription.sid,
+      title: title,
+      renewalPeriod: renewalPeriod,
+      price: price,
+      startDate: startDate
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then(() => window.location.reload())
+  }
+
   return (
      !isEditing ?
       <div key={subscription.title} className="bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 h-60">
@@ -90,7 +105,7 @@ function Subscription({subscription}: Readonly<ISubscriptionProps>) {
         value={convertToDate(startDate)}
         className="block w-full mb-3 bg-transparent border-2 border-blue-800 focus:border-blue-600 mt-2 py-0 px-3 rounded-md sm:text-sm sm:leading-4 outline-none text-white"
       />
-      <button className="bg-blue-600 font-bold text-white px-4 py-2 rounded hover:bg-blue-800 transition-colors duration-300 mr-3">Сохранить</button>
+      <button onClick={saveEditedSubscription} className="bg-blue-600 font-bold text-white px-4 py-2 rounded hover:bg-blue-800 transition-colors duration-300 mr-3">Сохранить</button>
       <button onClick={deleteSubscription} className="bg-red-500 font-bold text-white px-4 py-2 rounded hover:bg-red-800 transition-colors duration-300">Удалить</button>
     </div>
 
