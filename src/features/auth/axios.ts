@@ -6,6 +6,7 @@ const instance = axios.create({
 			? 'http://localhost:5555/'
 			: 'https://194.32.248.209:5555/',
 	headers: {
+		'Access-Control-Allow-Origin': '*',
 		'Content-Type': 'application/json',
 	},
 })
