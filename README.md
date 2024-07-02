@@ -16,8 +16,8 @@ Subscription Tracker is an application designed for managing user subscriptions.
 
 ## Technologies Used
 
-- **Frontend**: TypeScript, React, Redux Toolkit, Tailwind CSS.
-- **Backend**: TypeScript, Node.js, Express.js, MongoDB, JWT for authentication.
+- **Frontend**: [TypeScript](https://www.typescriptlang.org), [React](https://react.dev), [Redux Toolkit](https://redux-toolkit.js.org), [Tailwind CSS](https://tailwindcss.com).
+- **Backend**: [TypeScript](https://www.typescriptlang.org), [Node.js](https://nodejs.org/en), [Express.js](https://expressjs.com), [Mongoose](https://mongoosejs.com), [JWT](https://jwt.io) for authentication.
 - **Project** Structure: Client-server application with REST API for communication between frontend and backend.
 
 ## Installation and Running
