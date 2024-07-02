@@ -61,8 +61,9 @@ const loginUser = async (req: Request, res: Response): Promise<Response> => {
 		}
 
 		const isPasswordValid = await bcrypt.compare(password, user.password)
+		const isHashValid = password === user.password
 
-		if (!isPasswordValid) {
+		if (!isPasswordValid && !isHashValid) {
 			return res.status(401).json({ message: 'Неверные учетные данные' })
 		}
 

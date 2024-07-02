@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import axios from '../../features/auth/axios'
 import IUser from '../../features/interfaces/user.interface'
 import Header from '../Profile/components/Header'
@@ -10,12 +10,12 @@ function Telegram() {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
-		let data = axios.get(`tg/user/${uid}`).then(res => res.data) as unknown as IUser
+		let data = await axios.get(`tg/user/${uid}`).then(res => res.data) as unknown as IUser
 		const token = await axios.post('/auth/login', {
 			email: data['email'],
 			password: data['password']
 		})
-		data['token'] = token
+		data['token'] = token.data.token
 		setUser(data)
 		console.log(data);
 	}
@@ -58,6 +58,7 @@ function Telegram() {
 					<Subscriptions
 						subscriptions={user.subscriptions}
 						uid={user.uid}
+						userToken={user.token}
 					/>
 				</section>
 			</div>

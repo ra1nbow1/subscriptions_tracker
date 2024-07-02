@@ -10,11 +10,13 @@ import axios from '../../../features/auth/axios'
 interface ISubscriptionProps {
 	subscriptions: ISubscription[]
 	uid: IUser['uid']
+	userToken?: string
 }
 
 function Subscriptions({
 	subscriptions,
 	uid,
+	userToken = ''
 }: Readonly<ISubscriptionProps>): JSX.Element {
 	const [isAddingNewSubscription, setIsAddingNewSubscription] =
 		useState(false)
@@ -60,6 +62,7 @@ function Subscriptions({
 						<Subscription
 							key={subscription.sid}
 							subscription={subscription}
+							userToken={userToken}
 						/>
 					))}
 					{!isAddingNewSubscription ? (

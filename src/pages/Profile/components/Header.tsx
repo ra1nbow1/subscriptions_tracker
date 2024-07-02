@@ -63,7 +63,7 @@ function Header({ user, env = 'web' }: Readonly<IHeaderProps>) {
 			<div className="container mx-auto flex justify-between items-center">
 				<div className="flex flex-row ml-4">
 					<h1 className="text-2xl font-bold">
-						{user?.first_name} {user?.last_name} {user?.uid}
+						{user?.first_name} {user?.last_name} <span className='text-sm'>[{user?.uid}]</span>
 					</h1>
 					{env === 'web' &&
 						<button

@@ -8,13 +8,14 @@ import Subscriptions from './components/Subscriptions'
 import Header from './components/Header'
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
-import useTelegram from '../../features/hooks/useTelegram'
 
-function Profile() {
-	const { close, tgUser } = useTelegram()
+interface IProfileProps {
+	userToken?: string
+}
+
+function Profile({ userToken }: Readonly<IProfileProps>) {
 	const dispatch = useDispatch<AppDispatch>()
 	const navigate = useNavigate()
-	console.log(tgUser)
 	const { token } = useSelector((state: RootState) => state.auth)
 	const [user, setUser] = useState<IUser>({
 		uid: '',
@@ -62,6 +63,7 @@ function Profile() {
 				<Subscriptions
 					subscriptions={user.subscriptions}
 					uid={user.uid}
+					userToken={userToken}
 				/>
 			</section>
 		</>
