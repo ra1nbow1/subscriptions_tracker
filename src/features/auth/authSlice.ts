@@ -13,19 +13,40 @@ const initialState: AuthState = {
 	error: null,
 }
 
-export const loginUser = createAsyncThunk(
+type TErrorResponse = {
+	message: string
+	error: string
+}
+
+export const loginUser = createAsyncThunk<
+	string,
+	{ email: string; password: string },
+	{ rejectValue: TErrorResponse }
+>(
 	'auth/loginUser',
 	async (credentials: { email: string; password: string }, thunkAPI) => {
 		try {
 			const response = await axios.post('/auth/login', credentials)
 			return response.data.token
 		} catch (error: unknown) {
-			return thunkAPI.rejectWithValue(error.response.data)
+			return thunkAPI.rejectWithValue({
+				error: 'Unknown error',
+				message: '',
+			})
 		}
 	},
 )
 
-export const registerUser = createAsyncThunk(
+export const registerUser = createAsyncThunk<
+	string,
+	{
+		first_name: string
+		last_name: string
+		email: string
+		password: string
+	},
+	{ rejectValue: TErrorResponse }
+>(
 	'auth/registerUser',
 	async (
 		userData: {
@@ -40,7 +61,10 @@ export const registerUser = createAsyncThunk(
 			const response = await axios.post('/auth/register', userData)
 			return response.data.token
 		} catch (error) {
-			return thunkAPI.rejectWithValue(error.response.data)
+			return thunkAPI.rejectWithValue({
+				error: 'Unknown error',
+				message: '',
+			})
 		}
 	},
 )
@@ -72,9 +96,11 @@ const authSlice = createSlice({
 			)
 			.addCase(
 				loginUser.rejected,
-				(state, action: PayloadAction<string | null>) => {
+				(state, action: PayloadAction<TErrorResponse | undefined>) => {
 					state.status = 'failed'
 					state.error = action.payload
+						? action.payload.error
+						: 'Unknown error'
 				},
 			)
 			.addCase(registerUser.pending, (state) => {
@@ -90,9 +116,11 @@ const authSlice = createSlice({
 			)
 			.addCase(
 				registerUser.rejected,
-				(state, action: PayloadAction<string | null>) => {
+				(state, action: PayloadAction<TErrorResponse | undefined>) => {
 					state.status = 'failed'
 					state.error = action.payload
+						? action.payload.error
+						: 'Unknown error'
 				},
 			)
 	},

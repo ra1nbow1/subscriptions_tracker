@@ -36,15 +36,14 @@ function Register() {
 						<label className="block text-sm font-medium text-gray-300 mb-2">
 							Имя
 							<input
-							autoComplete="given-name"
-							id="first_name"
-							className="w-full p-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
-							value={first_name}
-							onChange={(e) => setFirst_name(e.target.value)}
-							required
-						/>
+								autoComplete="given-name"
+								id="first_name"
+								className="w-full p-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-600"
+								value={first_name}
+								onChange={(e) => setFirst_name(e.target.value)}
+								required
+							/>
 						</label>
-
 					</div>
 					<div className="mb-4">
 						<label className="block text-sm font-medium text-gray-300 mb-2">
