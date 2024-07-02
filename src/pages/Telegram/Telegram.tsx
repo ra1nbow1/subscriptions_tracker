@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import axios from '../../features/auth/axios'
 import IUser from '../../features/interfaces/user.interface'
+import Header from '../Profile/components/Header'
+import Subscriptions from '../Profile/components/Subscriptions'
 
 function Telegram() {
 	const [uid, setUid] = useState('')
@@ -43,8 +45,17 @@ function Telegram() {
 					</button>
 				</form>
 			</div> :
-			<div>
-			{user.uid}
+			<div className="bg-gray-800 flex flex-col justify-center p-8 rounded-lg shadow-lg w-full max-w-md">
+			<header>
+				<Header user={user} />
+			</header>
+
+			<section className="subscriptions h-fit min-h-screen">
+				<Subscriptions
+					subscriptions={user.subscriptions}
+					uid={user.uid}
+				/>
+			</section>
 			</div>
 	)
 }
