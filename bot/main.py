@@ -23,7 +23,7 @@ async def send_welcome(message: types.Message):
             [
                 types.InlineKeyboardButton(
                     text="Открыть приложение",
-                    web_app=types.WebAppInfo(url=f'https://a6bf-2a00-1370-8196-588-88e4-154c-2078-3a81.ngrok-free.app/telegram'),
+                    web_app=types.WebAppInfo(url=f'https://subscriptions-tracker-webapp.netlify.app/telegram'),
                 )
             ]
         ]
