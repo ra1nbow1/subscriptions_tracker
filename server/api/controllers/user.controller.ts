@@ -34,6 +34,7 @@ const registerUser = async (req: Request, res: Response): Promise<Response> => {
 			password: hashedPassword,
 			subscriptions: [],
 			token: '',
+			tgID: '',
 		})
 
 		return res.status(201).json(newUser)
@@ -218,11 +219,60 @@ const editSubscription = async (
 	}
 }
 
+const deleteUser = async (req: Request, res: Response) => {
+	const { uid } = req.params
+
+	await User.findOneAndDelete({ uid: uid })
+	return res.status(200).json({ message: 'Пользователь удален' })
+}
+
+const tgSetUserId = async (req: Request, res: Response) => {
+	const { uid, tgid } = req.body
+	try {
+		const user = await User.findOneAndUpdate(
+			{ uid: uid },
+			{ tgID: tgid },
+			{ new: true },
+		)
+		if (!user) {
+			return res.status(404).json({ message: 'Пользователь не найден' })
+		}
+
+		return res.status(200).json(user)
+	} catch (err) {
+		console.error('Ошибка при обновлении подписок пользователя:', err)
+		return res
+			.status(500)
+			.json({ message: 'Ошибка при обновлении подписок пользователя' })
+	}
+}
+
+const tgGetUserData = async (req: Request, res: Response) => {
+	const { uid } = req.params
+	try {
+		const user = (await User.findOne({ uid: uid })) as IUser
+		if (!user['tgID']) {
+			return res
+				.status(500)
+				.json({ message: 'Telegram аккаунт не привязан' })
+		}
+		return res.status(200).json(user)
+	} catch (err) {
+		console.error('Ошибка при поиске пользователя:', err)
+		return res
+			.status(500)
+			.json({ message: 'Ошибка при поиске пользователя' })
+	}
+}
+
 export {
 	registerUser,
 	loginUser,
 	getUserData,
+	deleteUser,
 	addSubscription,
 	deleteSubscription,
 	editSubscription,
+	tgSetUserId,
+	tgGetUserData,
 }

@@ -3,9 +3,12 @@ import {
 	registerUser,
 	loginUser,
 	getUserData,
+	deleteUser,
 	addSubscription,
 	deleteSubscription,
 	editSubscription,
+	tgSetUserId,
+	tgGetUserData,
 } from '../controllers/user.controller'
 
 const userRoutes = (): Router => {
@@ -22,6 +25,12 @@ const userRoutes = (): Router => {
 	router.post('/api/delete', deleteSubscription)
 
 	router.post('/api/edit', editSubscription)
+
+	router.post('/tg/user/', tgSetUserId)
+
+	router.get('/tg/user/:uid', tgGetUserData)
+
+	router.post('/api/delete/:uid', deleteUser)
 
 	return router
 }

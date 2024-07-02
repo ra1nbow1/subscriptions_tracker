@@ -16,6 +16,7 @@ export interface IUser extends Document {
 	password: string
 	subscriptions: ISubscription[]
 	token: string
+	tgID: string
 }
 
 type UserInput = {
@@ -26,6 +27,7 @@ type UserInput = {
 	password: IUser['password']
 	subscriptions: IUser['subscriptions']
 	token: IUser['token']
+	tgID: IUser['tgID']
 }
 
 const UserSchema = new Schema(
@@ -75,6 +77,11 @@ const UserSchema = new Schema(
 			type: Schema.Types.String,
 			required: false,
 			unique: true,
+		},
+		tgID: {
+			type: Schema.Types.String,
+			required: false,
+			unique: false,
 		},
 	},
 	{

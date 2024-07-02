@@ -62,7 +62,7 @@ function Header({ user }: Readonly<IHeaderProps>) {
 			<div className="container mx-auto flex justify-between items-center">
 				<div className="flex flex-row ml-4">
 					<h1 className="text-2xl font-bold">
-						{user?.first_name} {user?.last_name}
+						{user?.first_name} {user?.last_name} {user?.uid}
 					</h1>
 					<button
 						onClick={handleLogout}
