@@ -10,9 +10,10 @@ import { AppDispatch } from '../../../store'
 
 interface IHeaderProps {
 	user: IUser
+	env?: string
 }
 
-function Header({ user }: Readonly<IHeaderProps>) {
+function Header({ user, env = 'web' }: Readonly<IHeaderProps>) {
 	const subscriptions = user['subscriptions']
 	const dispatch = useDispatch<AppDispatch>()
 
@@ -64,11 +65,13 @@ function Header({ user }: Readonly<IHeaderProps>) {
 					<h1 className="text-2xl font-bold">
 						{user?.first_name} {user?.last_name} {user?.uid}
 					</h1>
-					<button
-						onClick={handleLogout}
-						className="ml-4 text-white bg-blue-600 px-4 py-2 rounded hover:bg-blue-800 transition-colors duration-300">
-						<FontAwesomeIcon icon={faSignOutAlt} size="lg" /> Выйти
-					</button>
+					{env === 'web' &&
+						<button
+							onClick={handleLogout}
+							className="ml-4 text-white bg-blue-600 px-4 py-2 rounded hover:bg-blue-800 transition-colors duration-300">
+							<FontAwesomeIcon icon={faSignOutAlt} size="lg" /> Выйти
+						</button>
+					}
 				</div>
 				<div className="text-right mr-4">
 					<p>

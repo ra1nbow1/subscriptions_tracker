@@ -6,14 +6,18 @@ import Subscriptions from '../Profile/components/Subscriptions'
 
 function Telegram() {
 	const [uid, setUid] = useState('')
-	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
 	const [user, setUser] = useState<IUser>()
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
-		const data = await axios.get(`tg/user/${uid}`)
-		setUser(data.data)
-		console.log(data.data);
+		let data = axios.get(`tg/user/${uid}`).then(res => res.data) as unknown as IUser
+		const token = await axios.post('/auth/login', {
+			email: data['email'],
+			password: data['password']
+		})
+		data['token'] = token
+		setUser(data)
+		console.log(data);
 	}
 
 	return (
@@ -46,16 +50,16 @@ function Telegram() {
 				</form>
 			</div> :
 			<div className="bg-gray-800 flex flex-col justify-center p-8 rounded-lg shadow-lg w-full max-w-md">
-			<header>
-				<Header user={user} />
-			</header>
+				<header>
+					<Header user={user} env="telegram" />
+				</header>
 
-			<section className="subscriptions h-fit min-h-screen">
-				<Subscriptions
-					subscriptions={user.subscriptions}
-					uid={user.uid}
-				/>
-			</section>
+				<section className="subscriptions h-fit min-h-screen">
+					<Subscriptions
+						subscriptions={user.subscriptions}
+						uid={user.uid}
+					/>
+				</section>
 			</div>
 	)
 }
