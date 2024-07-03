@@ -228,14 +228,14 @@ const deleteUser = async (req: Request, res: Response) => {
 }
 
 const tgSetUserId = async (req: Request, res: Response) => {
-	const { uid, tgid } = req.body
-	console.log('tgSetUserId')
+	const { uid, tgID } = req.body
 	try {
 		const user = await User.findOneAndUpdate(
 			{ uid: uid },
-			{ tgID: tgid },
+			{ tgID: tgID },
 			{ new: true },
 		)
+		console.log(user)
 		if (!user) {
 			return res.status(404).json({ message: 'Пользователь не найден' })
 		}
