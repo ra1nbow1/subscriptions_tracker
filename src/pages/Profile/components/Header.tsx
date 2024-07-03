@@ -75,7 +75,7 @@ function Header({ user, env = 'web', popupState, managePopup }: Readonly<IHeader
 							<FontAwesomeIcon icon={faSignOutAlt} size="lg" /> Выйти
 						</button>
 					}
-					{import.meta.env.VITE_WITH_TELEGRAM == 'true' &&
+					{import.meta.env.VITE_WITH_TELEGRAM == 'true' && env === 'web' &&
 					<button
 						onClick={() => managePopup(!popupState)}
 						className="lg:ml-4 md:ml-0 text-white bg-telegram px-4 py-2 rounded hover:bg-telegram-light transition-colors duration-300">
