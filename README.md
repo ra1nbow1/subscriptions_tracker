@@ -41,10 +41,9 @@ cd subscription_tracker
 2. Install dependencies for both client, server, and bot:
 
 ```bash
-cd client
-npm install
+npm install # client
 
-cd ../server
+cd ./server/api # server
 npm install
 
 cd ../bot
