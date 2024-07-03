@@ -252,6 +252,7 @@ const tgGetUserData = async (req: Request, res: Response) => {
 	const { uid } = req.params
 	try {
 		const user = (await User.findOne({ uid: uid })) as IUser
+		console.log(user)
 		if (!user['tgID']) {
 			return res
 				.status(500)

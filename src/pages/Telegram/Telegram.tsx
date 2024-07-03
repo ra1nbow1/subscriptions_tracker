@@ -3,21 +3,28 @@ import axios from '../../features/auth/axios'
 import IUser from '../../features/interfaces/user.interface'
 import Header from '../Profile/components/Header'
 import Subscriptions from '../Profile/components/Subscriptions'
+import useTelegram from '../../features/hooks/useTelegram'
 
 function Telegram() {
 	const [uid, setUid] = useState('')
 	const [user, setUser] = useState<IUser>()
+	const { tgUser } = useTelegram()
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 		let data = await axios.get(`tg/user/${uid}`).then(res => res.data) as unknown as IUser
+		if (!data['tgID']) {
+			await axios.post(`tg/user/`, {
+				uid: uid,
+				tgID: tgUser.user.id
+			})
+		}
 		const token = await axios.post('/auth/login', {
 			email: data['email'],
 			password: data['password']
 		})
 		data['token'] = token.data.token
 		setUser(data)
-		console.log(data);
 	}
 
 	return (
@@ -49,7 +56,7 @@ function Telegram() {
 					</button>
 				</form>
 			</div> :
-			<div className="bg-gray-800 flex flex-col justify-center p-8 rounded-lg shadow-lg w-full max-w-md">
+			<div className="bg-gray-800 flex flex-col justify-center p-5 rounded-lg shadow-lg w-full max-w-md">
 				<header>
 					<Header user={user} env="telegram" />
 				</header>
