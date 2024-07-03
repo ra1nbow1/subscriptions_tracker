@@ -14,6 +14,7 @@ function Telegram() {
 		e.preventDefault()
 		let data = await axios.get(`tg/user/${uid}`).then(res => res.data) as unknown as IUser
 		if (!data['tgID']) {
+			console.log('Не привязан аккаунт');
 			await axios.post(`tg/user/`, {
 				uid: uid,
 				tgID: tgUser.user.id
@@ -25,6 +26,7 @@ function Telegram() {
 		})
 		data['token'] = token.data.token
 		setUser(data)
+		console.log(data)
 	}
 
 	return (
