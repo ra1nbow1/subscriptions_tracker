@@ -34,6 +34,7 @@ const registerUser = async (req: Request, res: Response): Promise<Response> => {
 			password: hashedPassword,
 			subscriptions: [],
 			token: '',
+			tgID: '',
 		})
 
 		return res.status(201).json(newUser)
@@ -60,8 +61,9 @@ const loginUser = async (req: Request, res: Response): Promise<Response> => {
 		}
 
 		const isPasswordValid = await bcrypt.compare(password, user.password)
+		const isHashValid = password === user.password
 
-		if (!isPasswordValid) {
+		if (!isPasswordValid && !isHashValid) {
 			return res.status(401).json({ message: 'Неверные учетные данные' })
 		}
 
@@ -194,7 +196,7 @@ const editSubscription = async (
 		}
 
 		const newSubscriptions: ISubscription[] = user.subscriptions.map(
-			(subscription) =>
+			(subscription): ISubscription =>
 				subscription.sid === sid
 					? {
 							...subscription,
@@ -218,11 +220,55 @@ const editSubscription = async (
 	}
 }
 
+const deleteUser = async (req: Request, res: Response) => {
+	const { uid } = req.params
+
+	await User.findOneAndDelete({ uid: uid })
+	return res.status(200).json({ message: 'Пользователь удален' })
+}
+
+const tgSetUserId = async (req: Request, res: Response) => {
+	const { uid, tgID }: IUser = req.body
+	try {
+		const user: IUser = (await User.findOneAndUpdate(
+			{ uid: uid },
+			{ tgID: tgID },
+			{ new: true },
+		)) as IUser
+		if (!user) {
+			return res.status(404).json({ message: 'Пользователь не найден' })
+		}
+
+		return res.status(200).json(user)
+	} catch (err) {
+		console.error('Ошибка при обновлении подписок пользователя:', err)
+		return res
+			.status(500)
+			.json({ message: 'Ошибка при обновлении подписок пользователя' })
+	}
+}
+
+const tgGetUserData = async (req: Request, res: Response) => {
+	const { uid } = req.params
+	try {
+		const user: IUser = (await User.findOne({ uid: uid })) as IUser
+		return res.status(200).json(user)
+	} catch (err) {
+		console.error('Ошибка при поиске пользователя:', err)
+		return res
+			.status(500)
+			.json({ message: 'Ошибка при поиске пользователя' })
+	}
+}
+
 export {
 	registerUser,
 	loginUser,
 	getUserData,
+	deleteUser,
 	addSubscription,
 	deleteSubscription,
 	editSubscription,
+	tgSetUserId,
+	tgGetUserData,
 }

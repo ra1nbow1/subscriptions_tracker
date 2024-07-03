@@ -4,9 +4,13 @@ import axios from '../../../features/auth/axios'
 
 interface ISubscriptionProps {
 	subscription: ISubscription
+	userToken?: string
 }
 
-function Subscription({ subscription }: Readonly<ISubscriptionProps>) {
+function Subscription({
+	subscription,
+	userToken = '',
+}: Readonly<ISubscriptionProps>) {
 	const [isEditing, setIsEditing] = useState(false)
 	const [title, setTitle] = useState<ISubscription['title']>(
 		subscription.title,
@@ -35,7 +39,7 @@ function Subscription({ subscription }: Readonly<ISubscriptionProps>) {
 	}
 
 	const deleteSubscription = () => {
-		const token = localStorage.getItem('token')
+		const token = userToken || localStorage.getItem('token')
 		axios
 			.post(
 				'/api/delete',
@@ -50,7 +54,7 @@ function Subscription({ subscription }: Readonly<ISubscriptionProps>) {
 	}
 
 	const saveEditedSubscription = () => {
-		const token = localStorage.getItem('token')
+		const token = userToken || localStorage.getItem('token')
 		axios
 			.post(
 				'/api/edit',

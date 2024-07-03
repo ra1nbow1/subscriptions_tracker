@@ -12,10 +12,14 @@ import Register from './pages/Register/Register'
 import Profile from './pages/Profile'
 import { setToken } from './features/auth/authSlice'
 import './index.css'
+import useTelegram from './features/hooks/useTelegram'
+import Telegram from './pages/Telegram/Telegram'
 
 const App: React.FC = () => {
 	const dispatch = useDispatch()
 	const { token } = useSelector((state: RootState) => state.auth)
+
+	const { tgUser } = useTelegram()
 
 	useEffect(() => {
 		const savedToken = localStorage.getItem('token')
@@ -39,6 +43,16 @@ const App: React.FC = () => {
 					<Route
 						path="/profile"
 						element={token ? <Profile /> : <Navigate to="/login" />}
+					/>
+					<Route
+						path="/telegram"
+						element={
+							import.meta.env.VITE_WITH_TELEGRAM === 'true' ? (
+								<Telegram />
+							) : (
+								<Navigate to="/login" />
+							)
+						}
 					/>
 				</Routes>
 			</div>

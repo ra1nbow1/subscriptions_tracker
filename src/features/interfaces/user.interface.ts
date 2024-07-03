@@ -14,4 +14,5 @@ export default interface IUser {
 	password: string
 	subscriptions: ISubscription[]
 	token: string
+	tgID: string
 }
