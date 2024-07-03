@@ -7,7 +7,10 @@ interface ISubscriptionProps {
 	userToken?: string
 }
 
-function Subscription({ subscription, userToken = ''}: Readonly<ISubscriptionProps>) {
+function Subscription({
+	subscription,
+	userToken = '',
+}: Readonly<ISubscriptionProps>) {
 	const [isEditing, setIsEditing] = useState(false)
 	const [title, setTitle] = useState<ISubscription['title']>(
 		subscription.title,

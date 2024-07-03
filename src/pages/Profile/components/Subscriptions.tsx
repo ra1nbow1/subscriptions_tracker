@@ -16,7 +16,7 @@ interface ISubscriptionProps {
 function Subscriptions({
 	subscriptions,
 	uid,
-	userToken = ''
+	userToken = '',
 }: Readonly<ISubscriptionProps>): JSX.Element {
 	const [isAddingNewSubscription, setIsAddingNewSubscription] =
 		useState(false)

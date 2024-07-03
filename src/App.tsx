@@ -1,5 +1,10 @@
 import React, { useEffect } from 'react'
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
+import {
+	BrowserRouter as Router,
+	Route,
+	Routes,
+	Navigate,
+} from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from './store'
 import Login from './pages/Login/Login'
@@ -41,7 +46,13 @@ const App: React.FC = () => {
 					/>
 					<Route
 						path="/telegram"
-						element={import.meta.env.VITE_WITH_TELEGRAM === 'true' ? <Telegram /> : <Navigate to="/login" />}
+						element={
+							import.meta.env.VITE_WITH_TELEGRAM === 'true' ? (
+								<Telegram />
+							) : (
+								<Navigate to="/login" />
+							)
+						}
 					/>
 				</Routes>
 			</div>
