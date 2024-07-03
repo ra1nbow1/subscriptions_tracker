@@ -26,16 +26,15 @@ Subscription Tracker is an application designed for managing user subscriptions.
 
 ```bash
 git clone https://github.com/ra1nbow1/subscriptions_tracker.git
-cd subscription-tracker
+cd subscription_tracker
 ```
 
 2. Install dependencies for both client and server:
 
 ```bash
-cd client
-npm install
+npm install # client
 
-cd ../server
+cd ./server/api # server
 npm install
 ```
 
