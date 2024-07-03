@@ -1,17 +1,18 @@
 import logging
 import asyncio
-
+import os
+from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.filters import CommandStart
 
-API_TOKEN = "6479185219:AAE-0aMoK5TRZqTpuFjDZCAb--tyLmWjWcw"  # Замените на ваш токен
+load_dotenv()
 
 # Логирование
 logging.basicConfig(level=logging.INFO)
 
 # Инициализация бота и диспетчера
-bot = Bot(token="6479185219:AAE-0aMoK5TRZqTpuFjDZCAb--tyLmWjWcw")
+bot = Bot(token=os.environ["BOT_TOKEN"])
 dp = Dispatcher()
 
 
@@ -23,9 +24,7 @@ async def send_welcome(message: types.Message):
             [
                 types.InlineKeyboardButton(
                     text="Открыть приложение",
-                    web_app=types.WebAppInfo(
-                        url="https://subscriptions-tracker-webapp.netlify.app/telegram"
-                    ),
+                    web_app=types.WebAppInfo(url=os.environ["WEBAPP_URL"]),
                 )
             ]
         ]
