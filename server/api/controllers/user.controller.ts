@@ -196,7 +196,7 @@ const editSubscription = async (
 		}
 
 		const newSubscriptions: ISubscription[] = user.subscriptions.map(
-			(subscription) =>
+			(subscription): ISubscription =>
 				subscription.sid === sid
 					? {
 							...subscription,
@@ -228,14 +228,13 @@ const deleteUser = async (req: Request, res: Response) => {
 }
 
 const tgSetUserId = async (req: Request, res: Response) => {
-	const { uid, tgID } = req.body
+	const { uid, tgID }: IUser = req.body
 	try {
-		const user = await User.findOneAndUpdate(
+		const user: IUser = (await User.findOneAndUpdate(
 			{ uid: uid },
 			{ tgID: tgID },
 			{ new: true },
-		)
-		console.log(user)
+		)) as IUser
 		if (!user) {
 			return res.status(404).json({ message: 'Пользователь не найден' })
 		}
@@ -252,7 +251,7 @@ const tgSetUserId = async (req: Request, res: Response) => {
 const tgGetUserData = async (req: Request, res: Response) => {
 	const { uid } = req.params
 	try {
-		const user = (await User.findOne({ uid: uid })) as IUser
+		const user: IUser = (await User.findOne({ uid: uid })) as IUser
 		return res.status(200).json(user)
 	} catch (err) {
 		console.error('Ошибка при поиске пользователя:', err)

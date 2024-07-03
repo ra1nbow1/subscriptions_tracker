@@ -20,17 +20,17 @@ const userRoutes = (): Router => {
 
 	router.get('/api/user', getUserData as any)
 
-	router.put('/api/:uid/subscriptions', addSubscription)
-
-	router.post('/api/delete', deleteSubscription)
-
-	router.post('/api/edit', editSubscription)
+	router.post('/api/delete/:uid', deleteUser)
 
 	router.post('/tg/user/', tgSetUserId)
 
 	router.get('/tg/user/:uid', tgGetUserData)
 
-	router.post('/api/delete/:uid', deleteUser)
+	router.put('/api/:uid/subscriptions', addSubscription)
+
+	router.post('/api/delete', deleteSubscription)
+
+	router.post('/api/edit', editSubscription)
 
 	return router
 }
