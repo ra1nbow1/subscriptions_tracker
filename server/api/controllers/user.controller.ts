@@ -229,6 +229,7 @@ const deleteUser = async (req: Request, res: Response) => {
 
 const tgSetUserId = async (req: Request, res: Response) => {
 	const { uid, tgid } = req.body
+	console.log('tgSetUserId')
 	try {
 		const user = await User.findOneAndUpdate(
 			{ uid: uid },
@@ -252,12 +253,6 @@ const tgGetUserData = async (req: Request, res: Response) => {
 	const { uid } = req.params
 	try {
 		const user = (await User.findOne({ uid: uid })) as IUser
-		console.log(user)
-		if (!user['tgID']) {
-			return res
-				.status(500)
-				.json({ message: 'Telegram аккаунт не привязан' })
-		}
 		return res.status(200).json(user)
 	} catch (err) {
 		console.error('Ошибка при поиске пользователя:', err)

@@ -12,8 +12,9 @@ function Telegram() {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
-		let data = await axios.get(`tg/user/${uid}`).then(res => res.data) as unknown as IUser
-		if (!data['tgID']) {
+		let data = await axios.get(`tg/user/${uid}`).then(data => data.data)
+
+		if (!data.tgID) {
 			console.log('Не привязан аккаунт');
 			await axios.post(`tg/user/`, {
 				uid: uid,
@@ -26,7 +27,6 @@ function Telegram() {
 		})
 		data['token'] = token.data.token
 		setUser(data)
-		console.log(data)
 	}
 
 	return (
