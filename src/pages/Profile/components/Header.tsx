@@ -59,6 +59,7 @@ function Header({ user, env = 'web' }: Readonly<IHeaderProps>) {
 	}
 
 	return (
+		// TODO: Сделать кнопку с привязкой телеграма
 		<header className="bg-gray-800 text-white p-4 shadow-lg">
 			<div className="container mx-auto flex justify-between items-center">
 				<div className="flex flex-row ml-4">
