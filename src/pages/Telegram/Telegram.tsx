@@ -15,7 +15,6 @@ function Telegram() {
 		let data = await axios.get(`tg/user/${uid}`).then(data => data.data)
 
 		if (!data.tgID) {
-			console.log('Не привязан аккаунт');
 			await axios.post(`tg/user/`, {
 				uid: uid,
 				tgID: tgUser.user.id

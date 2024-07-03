@@ -41,7 +41,7 @@ const App: React.FC = () => {
 					/>
 					<Route
 						path="/telegram"
-						element={tgUser ? <Telegram /> : <Navigate to="/login" />}
+						element={import.meta.env.VITE_WITH_TELEGRAM === 'true' ? <Telegram /> : <Navigate to="/login" />}
 					/>
 				</Routes>
 			</div>
