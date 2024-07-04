@@ -31,6 +31,52 @@ If `VITE_WITH_TELEGRAM="true"` a new path `/telegram` will be available in the a
 
 ## Installation and Running
 
+### Using Docker
+
+
+
+**Telegram mini app is unable while using Docker!**
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/ra1nbow1/subscriptions_tracker.git
+cd subscription_tracker
+```
+
+2. Set up environment variable:
+
+*MongoDB is deployed locally in a separate container, so `MONGO_URI` is not needed. All ports are set.*
+
+```bash
+# /server/api/.env
+TOKEN_KEY="your_token"
+
+# you can create ./env to run the bot
+VITE_WITH_TELEGRAM="true"
+```
+
+2. Edit `server/api/package.json`
+
+Add this line:
+
+```json
+{
+  ...
+  "type": "module",
+  ...
+}
+```
+
+3. Run Docker container:
+
+```bash
+docker-compose up --build -d
+```
+
+
+### Without Docker
+
 1. Clone the repository:
 
 ```bash
@@ -46,8 +92,8 @@ npm install # client
 cd ./server/api # server
 npm install
 
-cd ../bot
-npm install
+cd ../../bot # bot
+pip install -r requirements.txt
 ```
 
 3. Create environment files for the bot, server, and project root:
@@ -59,7 +105,6 @@ WEBAPP_URL=".../telegram" # URL where the frontend is hosted (I used netlify)
 
 # /server/api/.env
 MONGO_URI="" # Your MongoDB connection string
-API_PORT="" # Port for the API server
 TOKEN_KEY="" # Key for JWT
 
 # /.env
@@ -71,15 +116,14 @@ VITE_WITH_TELEGRAM=true/false # Flag to show if Telegram integration should be e
 
 ```bash
 # Start the server
-cd server
+cd server/api
 npm run dev
 
 # Start the client
-cd ../client
 npm run dev
 ```
 
-5. If you want to run the bot, ensure the frontend and backend are hosted. For example, you can use ngrok for the backend:
+5. If you want to run the bot, ensure the frontend and backend are hosted. Don't forget to edit environment variable. For example, you can use ngrok for the backend:
 
 ```bash
 ngrok http http://localhost:5555/

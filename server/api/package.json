@@ -2,11 +2,11 @@
 	"name": "api",
 	"version": "1.0.0",
 	"main": "index.ts",
+	"type": "module",
 	"scripts": {
 		"dev": "ts-node-dev --respawn --transpile-only ./index.ts",
 		"start": "tsc && node index.js",
-		"build": "tsc --build",
-		"build:docker": "tsc --build -f ./tsconfig-docker.json"
+		"build": "tsc --build"
 	},
 	"keywords": [],
 	"author": "",

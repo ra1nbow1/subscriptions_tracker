@@ -17,7 +17,7 @@ app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-const port = process.env.API_PORT
+const port = 5555
 
 app.listen(port, () => {
 	console.log(`Бэкенд запущен на ${port} порту`)
