@@ -59,9 +59,7 @@ Add this line:
 
 ```json
 {
-  // ...
   "type": "module",
-  // ...
 }
 ```
 
