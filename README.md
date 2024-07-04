@@ -32,7 +32,7 @@ If `VITE_WITH_TELEGRAM="true"` a new path `/telegram` will be available in the a
 
 ### Using Docker
 
-**Telegram mini app is unable while using Docker!**
+**Telegram mini app is unavailable while using Docker due to Telegram restrictions to `http`!**
 
 1. Clone the repository:
 
