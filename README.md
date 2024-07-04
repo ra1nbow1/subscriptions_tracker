@@ -22,6 +22,7 @@ Subscription Tracker is an application designed for managing user subscriptions.
 - **Backend**: [TypeScript](https://www.typescriptlang.org), [Node.js](https://nodejs.org/en), [Express.js](https://expressjs.com), [Mongoose](https://mongoosejs.com), [JWT](https://jwt.io) for authentication.
 - **Project Structure**: Client-server application with REST API for communication between frontend and backend.
 - **Bot**: Python, [aiogram](https://docs.aiogram.dev/en/v3.1.1/index.html)
+- **Deployment Tools:** [Docker](https://www.docker.com)
 
 ## Telegram Integration
 
