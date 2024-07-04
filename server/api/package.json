@@ -3,7 +3,10 @@
 	"version": "1.0.0",
 	"main": "index.ts",
 	"scripts": {
-		"dev": "ts-node-dev index.ts"
+		"dev": "ts-node-dev --respawn --transpile-only ./index.ts",
+		"start": "tsc && node index.js",
+		"build": "tsc --build",
+		"build:docker": "tsc --build -f ./tsconfig-docker.json"
 	},
 	"keywords": [],
 	"author": "",
@@ -20,6 +23,7 @@
 		"express": "^4.19.2",
 		"jsonwebtoken": "^9.0.2",
 		"mongoose": "^8.4.4",
+		"ts-node": "^10.9.2",
 		"typescript": "^5.5.2"
 	},
 	"devDependencies": {

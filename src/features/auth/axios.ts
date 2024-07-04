@@ -1,8 +1,7 @@
 import axios from 'axios'
+console.log(import.meta.env)
 const instance = axios.create({
-	baseURL: import.meta.env.DEV
-		? 'http://localhost:5555'
-		: import.meta.env.VITE_BACKEND_URL,
+	baseURL: 'http://localhost:5555/',
 	headers: {
 		'Content-Type': 'application/json',
 	},

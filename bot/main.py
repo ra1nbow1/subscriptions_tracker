@@ -8,15 +8,12 @@ from aiogram.filters import CommandStart
 
 load_dotenv()
 
-# Логирование
 logging.basicConfig(level=logging.INFO)
 
-# Инициализация бота и диспетчера
 bot = Bot(token=os.environ["BOT_TOKEN"])
 dp = Dispatcher()
 
 
-# Обработчик команды /start
 @dp.message(CommandStart())
 async def send_welcome(message: types.Message):
     markup = types.InlineKeyboardMarkup(
@@ -39,5 +36,5 @@ async def main():
     await dp.start_polling(bot)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__" and os.environ["VITE_WITH_TELEGRAM"] == "true":
     asyncio.run(main())
