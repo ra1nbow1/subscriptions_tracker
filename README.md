@@ -6,6 +6,7 @@ Subscription Tracker is an application designed for managing user subscriptions.
 
 ## Features
 
+- **Docker support**
 - User registration and authentication.
 - Adding new subscriptions with fields for title, price, renewal period, and start date.
 - Viewing a list of all user subscriptions.
@@ -25,15 +26,11 @@ Subscription Tracker is an application designed for managing user subscriptions.
 ## Telegram Integration
 
 If `VITE_WITH_TELEGRAM="true"` a new path `/telegram` will be available in the application, which is just the
-`WEBAPP_URL` for the bot. The Telegram connection button will also be displayed in the header. When `VITE_WITH_TELEGRAM="false"` all these functions are not available
-
-
+`WEBAPP_URL` for the bot. The Telegram connection button will also be displayed in the header. When `VITE_WITH_TELEGRAM="false"` all these functions are not available.
 
 ## Installation and Running
 
 ### Using Docker
-
-
 
 **Telegram mini app is unable while using Docker!**
 
@@ -102,6 +99,7 @@ pip install -r requirements.txt
 # /bot/.env
 BOT_TOKEN="" # Your Telegram bot token
 WEBAPP_URL=".../telegram" # URL where the frontend is hosted (I used netlify)
+VITE_WITH_TELEGRAM="true/false" # Flag to show if Telegram integration should be enabled
 
 # /server/api/.env
 MONGO_URI="" # Your MongoDB connection string
@@ -109,7 +107,7 @@ TOKEN_KEY="" # Key for JWT
 
 # /.env
 BACKEND_URL="" # URL where the backend is hosted (I used ngrok)
-VITE_WITH_TELEGRAM=true/false # Flag to show if Telegram integration should be enabled
+VITE_WITH_TELEGRAM="true/false" # Flag to show if Telegram integration should be enabled
 ```
 
 4. Start the server and client:
@@ -130,6 +128,7 @@ ngrok http http://localhost:5555/
 ```
 
 6. Then, start the bot:
+
 ```bash
 python bot/main.py
 ```
