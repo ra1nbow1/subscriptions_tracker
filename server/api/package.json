@@ -2,7 +2,6 @@
 	"name": "api",
 	"version": "1.0.0",
 	"main": "index.ts",
-	"type": "module",
 	"scripts": {
 		"dev": "ts-node-dev --respawn --transpile-only ./index.ts",
 		"start": "tsc && node index.js",
