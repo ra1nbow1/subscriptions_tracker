@@ -50,7 +50,7 @@ cd subscription_tracker
 # /server/api/.env
 TOKEN_KEY="your_token"
 
-# you can create ./env to run the bot
+# you can create /.env to run the bot
 VITE_WITH_TELEGRAM="true"
 ```
 
@@ -85,7 +85,7 @@ cd subscription_tracker
 ```bash
 npm install # client
 
-cd ./server/api # server
+cd /server/api # server
 npm install
 
 cd ../../bot # bot
