@@ -14,6 +14,7 @@ import { setToken } from './features/auth/authSlice'
 import './index.css'
 import useTelegram from './features/hooks/useTelegram'
 import Telegram from './pages/Telegram/Telegram'
+import { Analytics } from "@vercel/analytics/react"
 
 const App: React.FC = () => {
 	const dispatch = useDispatch()
@@ -54,6 +55,7 @@ const App: React.FC = () => {
 							)
 						}
 					/>
+					<Analytics />
 				</Routes>
 			</div>
 		</Router>
