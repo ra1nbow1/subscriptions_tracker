@@ -28,17 +28,18 @@ function Profile({ userToken }: Readonly<IProfileProps>) {
 		password: '',
 		subscriptions: [],
 		token: '',
-		tgID: '',
+		tgID: ''
 	})
 
 	useEffect(() => {
 		const fetchUser = async () => {
 			try {
 				const response = await axios.get('/api/user', {
-					headers: { Authorization: `Bearer ${token}` },
+					headers: { Authorization: `Bearer ${token}` }
 				})
 				setUser(response.data)
-			} catch (error) {
+			}
+			catch (error) {
 				console.error('Error fetching user:', error)
 				dispatch(logout())
 				navigate('/login')
@@ -47,7 +48,8 @@ function Profile({ userToken }: Readonly<IProfileProps>) {
 
 		if (token) {
 			fetchUser()
-		} else {
+		}
+		else {
 			navigate('/login')
 		}
 	}, [token, dispatch, history])
@@ -71,7 +73,8 @@ function Profile({ userToken }: Readonly<IProfileProps>) {
 				/>
 			</header>
 			{popupState === true && (
-				<div className="flex flex-col max-w-screen-xl p-4 bg-gray-800 transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded fixed">
+				<div
+					className="flex flex-col max-w-screen-xl p-4 bg-gray-800 transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded fixed">
 					<div className="flex justify-between items-center font-bold text-2xl mb-3">
 						{user.tgID != '' ? 'Telegram подключен' : 'Подключите Telegram'}
 						<FontAwesomeIcon
