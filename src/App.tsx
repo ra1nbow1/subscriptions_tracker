@@ -32,6 +32,8 @@ const App: React.FC = () => {
 	return (
 		<Router>
 			<div className="bg-gray-900 text-white">
+				<Analytics />
+
 				<Routes>
 					<Route
 						path="/"
@@ -55,7 +57,6 @@ const App: React.FC = () => {
 							)
 						}
 					/>
-					<Analytics />
 				</Routes>
 			</div>
 		</Router>
