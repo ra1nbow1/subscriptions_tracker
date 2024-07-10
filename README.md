@@ -7,7 +7,7 @@ Subscription Tracker is an application designed for managing user subscriptions.
 ## Features
 
 - **Docker support**
-- User registration and authentication.
+- User registration (with email confirmation) and authentication.
 - Adding new subscriptions with fields for title, price, renewal period, and start date.
 - Viewing a list of all user subscriptions.
 - Editing existing subscriptions.
@@ -103,6 +103,10 @@ VITE_WITH_TELEGRAM="true/false" # Flag to show if Telegram integration should be
 # /server/api/.env
 MONGO_URI="" # Your MongoDB connection string
 TOKEN_KEY="" # Key for JWT
+MAIL_SERVER="" # URL for SMTP server
+MAIL_USER="" # Your mail user
+MAIL_PASSWORD="" # Your mail password
+BASE_URL="http://localhost:5555" # Base URL that will be used in email confirmation link (localhost for development)
 
 # /.env
 BACKEND_URL="" # URL where the backend is hosted (I used ngrok)
