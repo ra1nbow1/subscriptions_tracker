@@ -85,7 +85,11 @@ function Header({
 					{import.meta.env.VITE_WITH_TELEGRAM == 'true' &&
 						env === 'web' && (
 							<button
-								onClick={managePopup ? () => managePopup(!popupState) : () => {}}
+								onClick={() =>
+									managePopup
+										? managePopup(!popupState)
+										: () => {}
+								}
 								className="lg:ml-4 md:ml-0 text-white bg-telegram px-4 py-2 rounded hover:bg-telegram-light transition-colors duration-300">
 								<FontAwesomeIcon icon={faTelegram} size="lg" />{' '}
 								{user.tgID ? 'Подключено' : 'Подключить'}

@@ -18,7 +18,9 @@ const registerUser = async (req: Request, res: Response): Promise<Response> => {
 	}
 
 	try {
-		const existingUser: IUser | null = await User.findOne({ email }) as IUser
+		const existingUser: IUser | null = (await User.findOne({
+			email,
+		})) as IUser
 
 		if (existingUser) {
 			return res
@@ -28,7 +30,10 @@ const registerUser = async (req: Request, res: Response): Promise<Response> => {
 
 		const hashedPassword = await bcrypt.hash(password, 10)
 		const uid = (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6)
-		const hash= crypto.createHash('md5').update(email.split('@')[0]).digest("hex");
+		const hash = crypto
+			.createHash('md5')
+			.update(email.split('@')[0])
+			.digest('hex')
 
 		await sendMail(email, uid, hash)
 
@@ -42,7 +47,7 @@ const registerUser = async (req: Request, res: Response): Promise<Response> => {
 			token: '',
 			tgID: '',
 			hash: hash,
-			emailVerified: false
+			emailVerified: false,
 		})
 
 		return res.status(201).json(newUser)
@@ -93,7 +98,8 @@ const loginUser = async (req: Request, res: Response): Promise<Response> => {
 
 // Получение данных пользователя
 const getUserData = async (req: Request, res: Response): Promise<Response> => {
-	const token: IUser['token'] | undefined = req.headers.authorization?.split(' ')[1]
+	const token: IUser['token'] | undefined =
+		req.headers.authorization?.split(' ')[1]
 
 	if (!token) {
 		return res
@@ -130,11 +136,11 @@ const addSubscription = async (
 	const { subscriptions }: { subscriptions: ISubscription[] } = req.body
 
 	try {
-		const updatedUser: IUser | null = await User.findOneAndUpdate(
+		const updatedUser: IUser | null = (await User.findOneAndUpdate(
 			{ uid: uid },
 			{ subscriptions: subscriptions },
 			{ new: true },
-		) as IUser
+		)) as IUser
 		if (!updatedUser) {
 			return res.status(404).json({ message: 'Пользователь не найден' })
 		}
@@ -184,7 +190,8 @@ const editSubscription = async (
 	req: Request,
 	res: Response,
 ): Promise<Response<unknown, Record<string, IUser>>> => {
-	const token: IUser['token'] | undefined = req.headers.authorization?.split(' ')[1]
+	const token: IUser['token'] | undefined =
+		req.headers.authorization?.split(' ')[1]
 	const { sid, title, renewalPeriod, price, startDate }: ISubscription =
 		req.body
 
@@ -207,12 +214,12 @@ const editSubscription = async (
 			(subscription): ISubscription =>
 				subscription.sid === sid
 					? {
-						...subscription,
-						title,
-						renewalPeriod,
-						price,
-						startDate,
-					}
+							...subscription,
+							title,
+							renewalPeriod,
+							price,
+							startDate,
+						}
 					: subscription,
 		)
 		await user.save()
@@ -268,10 +275,10 @@ const tgGetUserData = async (req: Request, res: Response) => {
 }
 
 const verifyEmail = async (req: Request, res: Response) => {
-	const { uid, hash } : { uid: IUser['uid'], hash: string} = req.params
+	const { uid, hash }: { uid: IUser['uid']; hash: string } = req.params
 
 	try {
-		const user: IUser = (await User.findOne({ uid: uid})) as IUser
+		const user: IUser = (await User.findOne({ uid: uid })) as IUser
 		if (!user) {
 			return res.status(404).json({ message: 'Пользователь не найден' })
 		}
@@ -280,8 +287,7 @@ const verifyEmail = async (req: Request, res: Response) => {
 		}
 		if (user.hash !== hash) {
 			return res.status(403).json({ message: 'Неверный хэш' })
-		}
-		else {
+		} else {
 			await User.findOneAndUpdate(
 				{ uid: uid },
 				{ emailVerified: true },
@@ -289,11 +295,7 @@ const verifyEmail = async (req: Request, res: Response) => {
 			)
 			return res.status(200).json({ message: 'Email подтвержден' })
 		}
-	}
-	catch (err) {
-
-	}
-
+	} catch (err) {}
 }
 
 export {
@@ -306,5 +308,5 @@ export {
 	editSubscription,
 	tgSetUserId,
 	tgGetUserData,
-	verifyEmail
+	verifyEmail,
 }

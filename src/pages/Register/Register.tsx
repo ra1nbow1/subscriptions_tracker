@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { AppDispatch } from '../../store'
-import { registerUser } from '../../features/auth/authSlice'
-import { useNavigate } from 'react-router-dom'
-import IUser from '../../features/interfaces/user.interface'
 import { Helmet } from 'react-helmet'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { registerUser } from '../../features/auth/authSlice'
+import IUser from '../../features/interfaces/user.interface'
+import { AppDispatch } from '../../store'
 
 function Register() {
 	const dispatch = useDispatch<AppDispatch>()
@@ -18,18 +18,17 @@ function Register() {
 
 	const handleRegister = (e: React.FormEvent) => {
 		e.preventDefault()
-		dispatch<any>(registerUser({ first_name, last_name, email, password })).then(
-			(res) => {
-				if (res.type === 'auth/registerUser/fulfilled') {
-					navigate('/profile')
-				}
-				else if (res.type === 'auth/registerUser/rejected') {
-					setAlertContent(res.payload.message)
-					setAlertIsOpened(true)
-					setTimeout(() => setAlertIsOpened(false), 3000)
-				}
-			},
-		)
+		dispatch<any>(
+			registerUser({ first_name, last_name, email, password }),
+		).then((res) => {
+			if (res.type === 'auth/registerUser/fulfilled') {
+				navigate('/profile')
+			} else if (res.type === 'auth/registerUser/rejected') {
+				setAlertContent(res.payload.message)
+				setAlertIsOpened(true)
+				setTimeout(() => setAlertIsOpened(false), 3000)
+			}
+		})
 	}
 
 	return (
@@ -113,9 +112,10 @@ function Register() {
 					<title>Трекер подписок • Регистрация</title>
 				</Helmet>
 			</div>
-			{ alertIsOpened && (
-				<div className="p-4 mb-4 text-sm text-red-800 fixed bottom-10 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
-					 role="alert">
+			{alertIsOpened && (
+				<div
+					className="p-4 mb-4 text-sm text-red-800 fixed bottom-10 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+					role="alert">
 					<span className="font-medium">Ошибка!</span> {alertContent}
 				</div>
 			)}

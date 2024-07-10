@@ -9,7 +9,7 @@ import {
 	registerUser,
 	tgGetUserData,
 	tgSetUserId,
-	verifyEmail
+	verifyEmail,
 } from '../controllers/user.controller'
 
 const userRoutes = (): Router => {
@@ -34,7 +34,6 @@ const userRoutes = (): Router => {
 	router.post('/api/delete', deleteSubscription)
 
 	router.post('/api/edit', editSubscription)
-
 
 	return router
 }

@@ -18,8 +18,7 @@ function Login() {
 		dispatch<any>(loginUser({ email, password })).then((res) => {
 			if (res.type === 'auth/loginUser/fulfilled') {
 				navigate('/profile')
-			}
-			else if (res.type === 'auth/loginUser/rejected') {
+			} else if (res.type === 'auth/loginUser/rejected') {
 				setAlertContent(res.payload.message)
 				setAlertIsOpened(true)
 				setTimeout(() => setAlertIsOpened(false), 3000)

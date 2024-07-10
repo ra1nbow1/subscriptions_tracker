@@ -96,7 +96,7 @@ const UserSchema = new Schema(
 			type: Schema.Types.Boolean,
 			required: false,
 			unique: false,
-		}
+		},
 	},
 	{
 		collection: 'users',
