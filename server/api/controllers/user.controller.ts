@@ -26,6 +26,8 @@ const registerUser = async (req: Request, res: Response): Promise<Response> => {
 
 		const hashedPassword = await bcrypt.hash(password, 10)
 
+		// TODO: Отправка писем
+
 		const newUser: IUser = await User.create({
 			uid: (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6),
 			first_name,
@@ -35,6 +37,9 @@ const registerUser = async (req: Request, res: Response): Promise<Response> => {
 			subscriptions: [],
 			token: '',
 			tgID: '',
+			// TODO: Сделать хэш
+			hash: '',
+			emailVerified: false
 		})
 
 		return res.status(201).json(newUser)
@@ -58,6 +63,10 @@ const loginUser = async (req: Request, res: Response): Promise<Response> => {
 		const user: IUser = (await User.findOne({ email })) as IUser
 		if (!user) {
 			return res.status(401).json({ message: 'Неверные учетные данные' })
+		}
+
+		if (!user.emailVerified) {
+			return res.status(401).json({ message: 'Email не подтвержден' })
 		}
 
 		const isPasswordValid = await bcrypt.compare(password, user.password)
@@ -255,6 +264,32 @@ const tgGetUserData = async (req: Request, res: Response) => {
 	}
 }
 
+const verifyEmail = async (req: Request, res: Response) => {
+	const { uid, hash } : { uid: IUser['uid'], hash: string} = req.params
+
+	try {
+		const user: IUser = (await User.findOne({ uid: uid})) as IUser
+		if (!user) {
+			return res.status(404).json({ message: 'Пользователь не найден' })
+		}
+		if (user.hash !== hash) {
+			return res.status(403).json({ message: 'Неверный хэш' })
+		}
+		else {
+			await User.findOneAndUpdate(
+				{ uid: uid },
+				{ emailVerified: true },
+				{ new: true },
+			)
+			return res.status(200).json({ message: 'Email подтвержден' })
+		}
+	}
+	catch (err) {
+
+	}
+
+}
+
 export {
 	registerUser,
 	loginUser,
@@ -265,4 +300,5 @@ export {
 	editSubscription,
 	tgSetUserId,
 	tgGetUserData,
+	verifyEmail
 }

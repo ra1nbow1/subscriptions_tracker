@@ -17,6 +17,8 @@ export interface IUser extends Document {
 	subscriptions: ISubscription[]
 	token: string
 	tgID: string
+	hash: string
+	emailVerified: boolean
 }
 
 type UserInput = {
@@ -28,6 +30,8 @@ type UserInput = {
 	subscriptions: IUser['subscriptions']
 	token: IUser['token']
 	tgID: IUser['tgID']
+	hash: IUser['hash']
+	emailVerified: IUser['emailVerified']
 }
 
 const UserSchema = new Schema(
@@ -83,6 +87,16 @@ const UserSchema = new Schema(
 			required: false,
 			unique: false,
 		},
+		hash: {
+			type: Schema.Types.String,
+			required: false,
+			unique: true,
+		},
+		emailVerified: {
+			type: Schema.Types.Boolean,
+			required: false,
+			unique: false,
+		}
 	},
 	{
 		collection: 'users',

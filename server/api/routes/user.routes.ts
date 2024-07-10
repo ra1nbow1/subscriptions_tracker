@@ -1,14 +1,15 @@
 import { Router } from 'express'
 import {
-	registerUser,
-	loginUser,
-	getUserData,
-	deleteUser,
 	addSubscription,
 	deleteSubscription,
+	deleteUser,
 	editSubscription,
-	tgSetUserId,
+	getUserData,
+	loginUser,
+	registerUser,
 	tgGetUserData,
+	tgSetUserId,
+	verifyEmail
 } from '../controllers/user.controller'
 
 const userRoutes = (): Router => {
@@ -17,6 +18,8 @@ const userRoutes = (): Router => {
 	router.post('/auth/register', registerUser as any)
 
 	router.post('/auth/login', loginUser as any)
+
+	router.get('/auth/verify/:uid/:hash', verifyEmail)
 
 	router.get('/api/user', getUserData as any)
 
@@ -31,6 +34,7 @@ const userRoutes = (): Router => {
 	router.post('/api/delete', deleteSubscription)
 
 	router.post('/api/edit', editSubscription)
+
 
 	return router
 }
