@@ -14,6 +14,7 @@ function Register() {
 	const [email, setEmail] = useState<IUser['email']>('')
 	const [password, setPassword] = useState<IUser['password']>('')
 	const [alertIsOpened, setAlertIsOpened] = useState(false)
+	const [alertContent, setAlertContent] = useState('')
 
 	const handleRegister = (e: React.FormEvent) => {
 		e.preventDefault()
@@ -23,6 +24,7 @@ function Register() {
 					navigate('/profile')
 				}
 				else if (res.type === 'auth/registerUser/rejected') {
+					setAlertContent(res.payload.message)
 					setAlertIsOpened(true)
 					setTimeout(() => setAlertIsOpened(false), 3000)
 				}
@@ -114,7 +116,7 @@ function Register() {
 			{ alertIsOpened && (
 				<div className="p-4 mb-4 text-sm text-red-800 fixed bottom-10 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
 					 role="alert">
-					<span className="font-medium">Ошибка!</span> Такой email уже существует
+					<span className="font-medium">Ошибка!</span> {alertContent}
 				</div>
 			)}
 		</div>

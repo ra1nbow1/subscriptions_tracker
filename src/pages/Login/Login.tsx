@@ -11,15 +11,16 @@ function Login() {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [alertIsOpened, setAlertIsOpened] = useState(false)
+	const [alertContent, setAlertContent] = useState('')
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
 		dispatch<any>(loginUser({ email, password })).then((res) => {
-			console.log(res);
 			if (res.type === 'auth/loginUser/fulfilled') {
 				navigate('/profile')
 			}
 			else if (res.type === 'auth/loginUser/rejected') {
+				setAlertContent(res.payload.message)
 				setAlertIsOpened(true)
 				setTimeout(() => setAlertIsOpened(false), 3000)
 			}
@@ -82,10 +83,11 @@ function Login() {
 			<Helmet>
 				<title>Трекер подписок • Вход</title>
 			</Helmet>
-			{ alertIsOpened && (
-				<div className="p-4 mb-4 text-sm text-red-800 fixed bottom-10 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
-					 role="alert">
-					<span className="font-medium">Ошибка!</span> Неверные учетные данные
+			{alertIsOpened && (
+				<div
+					className="p-4 mb-4 text-sm text-red-800 fixed bottom-10 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+					role="alert">
+					<span className="font-medium">Ошибка!</span> {alertContent}
 				</div>
 			)}
 		</div>
