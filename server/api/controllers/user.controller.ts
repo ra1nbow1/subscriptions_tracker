@@ -1,8 +1,8 @@
-import { Request, Response } from 'express'
-import { User, IUser, ISubscription } from '../models/user.model'
-import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import dotenv from 'dotenv'
+import { Request, Response } from 'express'
+import jwt from 'jsonwebtoken'
+import { ISubscription, IUser, User } from '../models/user.model'
 
 dotenv.config()
 const secretKey: string = process.env.TOKEN_KEY as string // Замените на ваш секретный ключ
@@ -16,7 +16,7 @@ const registerUser = async (req: Request, res: Response): Promise<Response> => {
 	}
 
 	try {
-		const existingUser: IUser | null = await User.findOne({ email })
+		const existingUser: IUser | null = await User.findOne({ email }) as IUser
 
 		if (existingUser) {
 			return res
@@ -81,8 +81,7 @@ const loginUser = async (req: Request, res: Response): Promise<Response> => {
 
 // Получение данных пользователя
 const getUserData = async (req: Request, res: Response): Promise<Response> => {
-	const token: IUser['token'] | undefined =
-		req.headers.authorization?.split(' ')[1]
+	const token: IUser['token'] | undefined = req.headers.authorization?.split(' ')[1]
 
 	if (!token) {
 		return res
@@ -123,7 +122,7 @@ const addSubscription = async (
 			{ uid: uid },
 			{ subscriptions: subscriptions },
 			{ new: true },
-		)
+		) as IUser
 		if (!updatedUser) {
 			return res.status(404).json({ message: 'Пользователь не найден' })
 		}
@@ -142,9 +141,7 @@ const deleteSubscription = async (
 	req: Request,
 	res: Response,
 ): Promise<Response<unknown, Record<string, IUser>>> => {
-	const token: IUser['token'] = req.headers.authorization?.split(
-		' ',
-	)[1] as IUser['token']
+	const token: IUser['token'] = req.headers.authorization?.split(' ')[1]
 	const { sid }: { sid: ISubscription['sid'] } = req.body
 
 	if (!token) {
@@ -175,8 +172,7 @@ const editSubscription = async (
 	req: Request,
 	res: Response,
 ): Promise<Response<unknown, Record<string, IUser>>> => {
-	const token: IUser['token'] | undefined =
-		req.headers.authorization?.split(' ')[1]
+	const token: IUser['token'] | undefined = req.headers.authorization?.split(' ')[1]
 	const { sid, title, renewalPeriod, price, startDate }: ISubscription =
 		req.body
 
@@ -195,20 +191,18 @@ const editSubscription = async (
 			return res.status(404).json({ message: 'Пользователь не найден' })
 		}
 
-		const newSubscriptions: ISubscription[] = user.subscriptions.map(
+		user.subscriptions = user.subscriptions.map(
 			(subscription): ISubscription =>
 				subscription.sid === sid
 					? {
-							...subscription,
-							title,
-							renewalPeriod,
-							price,
-							startDate,
-						}
+						...subscription,
+						title,
+						renewalPeriod,
+						price,
+						startDate,
+					}
 					: subscription,
 		)
-
-		user.subscriptions = newSubscriptions
 		await user.save()
 
 		return res.status(200).json(user)
