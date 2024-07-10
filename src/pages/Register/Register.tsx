@@ -13,13 +13,18 @@ function Register() {
 	const [last_name, setLast_name] = useState<IUser['last_name']>('')
 	const [email, setEmail] = useState<IUser['email']>('')
 	const [password, setPassword] = useState<IUser['password']>('')
+	const [alertIsOpened, setAlertIsOpened] = useState(false)
 
 	const handleRegister = (e: React.FormEvent) => {
 		e.preventDefault()
-		dispatch(registerUser({ first_name, last_name, email, password })).then(
+		dispatch<any>(registerUser({ first_name, last_name, email, password })).then(
 			(res) => {
 				if (res.type === 'auth/registerUser/fulfilled') {
 					navigate('/profile')
+				}
+				else if (res.type === 'auth/registerUser/rejected') {
+					setAlertIsOpened(true)
+					setTimeout(() => setAlertIsOpened(false), 3000)
 				}
 			},
 		)
@@ -106,6 +111,12 @@ function Register() {
 					<title>Трекер подписок • Регистрация</title>
 				</Helmet>
 			</div>
+			{ alertIsOpened && (
+				<div className="p-4 mb-4 text-sm text-red-800 fixed bottom-10 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+					 role="alert">
+					<span className="font-medium">Ошибка!</span> Такой email уже существует
+				</div>
+			)}
 		</div>
 	)
 }
