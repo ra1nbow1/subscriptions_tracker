@@ -3,6 +3,8 @@ import dotenv from 'dotenv'
 import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import { ISubscription, IUser, User } from '../models/user.model'
+import sendMail from '../mailer/mailer'
+import * as crypto from 'crypto'
 
 dotenv.config()
 const secretKey: string = process.env.TOKEN_KEY as string // Замените на ваш секретный ключ
@@ -25,11 +27,13 @@ const registerUser = async (req: Request, res: Response): Promise<Response> => {
 		}
 
 		const hashedPassword = await bcrypt.hash(password, 10)
+		const uid = (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6)
+		const hash= crypto.createHash('md5').update(email.split('@')[0]).digest("hex");
 
-		// TODO: Отправка писем
+		await sendMail(email, uid, hash)
 
 		const newUser: IUser = await User.create({
-			uid: (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6),
+			uid: uid,
 			first_name,
 			last_name,
 			email,
@@ -37,8 +41,7 @@ const registerUser = async (req: Request, res: Response): Promise<Response> => {
 			subscriptions: [],
 			token: '',
 			tgID: '',
-			// TODO: Сделать хэш
-			hash: '',
+			hash: hash,
 			emailVerified: false
 		})
 
@@ -271,6 +274,9 @@ const verifyEmail = async (req: Request, res: Response) => {
 		const user: IUser = (await User.findOne({ uid: uid})) as IUser
 		if (!user) {
 			return res.status(404).json({ message: 'Пользователь не найден' })
+		}
+		if (user.emailVerified) {
+			return res.status(403).json({ message: 'Email уже подтвержден' })
 		}
 		if (user.hash !== hash) {
 			return res.status(403).json({ message: 'Неверный хэш' })
