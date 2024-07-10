@@ -18,20 +18,21 @@ type TErrorResponse = {
 	error: string
 }
 
-export const loginUser = createAsyncThunk<
-	string,
-	{ email: string; password: string },
-	{ rejectValue: TErrorResponse }
->(
+export const loginUser= createAsyncThunk<string, { email: string; password: string }, { rejectValue: TErrorResponse }>(
 	'auth/loginUser',
 	async (credentials: { email: string; password: string }, thunkAPI) => {
 		try {
 			const response = await axios.post('/auth/login', credentials)
+			console.log(response)
 			return response.data.token
 		} catch (error: unknown) {
+			let errorMessage = 'Unknown error';
+			if (error.response && error.response.data && error.response.data.message) {
+				errorMessage = error.response.data.message;
+			}
 			return thunkAPI.rejectWithValue({
-				error: 'Unknown error',
-				message: '',
+				error: 'Error',
+				message: errorMessage,
 			})
 		}
 	},
@@ -61,9 +62,13 @@ export const registerUser = createAsyncThunk<
 			const response = await axios.post('/auth/register', userData)
 			return response.data.token
 		} catch (error) {
+			let errorMessage = 'Unknown error';
+			if (error.response && error.response.data && error.response.data.message) {
+				errorMessage = error.response.data.message;
+			}
 			return thunkAPI.rejectWithValue({
-				error: 'Unknown error',
-				message: '',
+				error: 'Error',
+				message: errorMessage,
 			})
 		}
 	},
