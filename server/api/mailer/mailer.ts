@@ -10,20 +10,20 @@ const transporter = nodemailer.createTransport({
 	secure: false,
 	auth: {
 		user: process.env.MAIL_USER,
-		pass: process.env.MAIL_PASSWORD,
-	},
+		pass: process.env.MAIL_PASSWORD
+	}
 })
 
 export default async function sendMail(
-	recepient: IUser['email'],
+	recipient: IUser['email'],
 	uid: IUser['uid'],
-	hash: IUser['hash'],
+	hash: IUser['hash']
 ) {
 	const info = await transporter.sendMail({
 		from: `"Трекер подписок" <${process.env.MAIL_USER}>`,
-		to: recepient,
+		to: recipient,
 		subject: 'Подтвердите адрес электронной почты',
-		html: `Для подтверждения перейдите по <a href="${process.env.BASE_URL}/auth/verify/${uid}/${hash}/">ссылке</a>`,
+		html: `Для подтверждения перейдите по <a href="${process.env.BASE_URL}/auth/verify/${uid}/${hash}/">ссылке</a>`
 	})
 
 	// console.log("Sent: %s", info.messageId);

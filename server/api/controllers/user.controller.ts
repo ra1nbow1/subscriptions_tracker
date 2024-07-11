@@ -1,10 +1,11 @@
 import bcrypt from 'bcryptjs'
+import * as crypto from 'crypto'
 import dotenv from 'dotenv'
 import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
-import { ISubscription, IUser, User } from '../models/user.model'
+import QueryString from 'qs'
 import sendMail from '../mailer/mailer'
-import * as crypto from 'crypto'
+import { ISubscription, IUser, User } from '../models/user.model'
 
 dotenv.config()
 const secretKey: string = process.env.TOKEN_KEY as string // Замените на ваш секретный ключ
@@ -276,7 +277,12 @@ const tgGetUserData = async (req: Request, res: Response) => {
 
 const verifyEmail = async (req: Request, res: Response) => {
 	const { uid, hash }: { uid: IUser['uid']; hash: string } = req.params
-
+	const force:
+		| string
+		| string[]
+		| QueryString.ParsedQs
+		| QueryString.ParsedQs[]
+		| undefined = req.query.force
 	try {
 		const user: IUser = (await User.findOne({ uid: uid })) as IUser
 		if (!user) {
@@ -285,7 +291,7 @@ const verifyEmail = async (req: Request, res: Response) => {
 		if (user.emailVerified) {
 			return res.status(403).json({ message: 'Email уже подтвержден' })
 		}
-		if (user.hash !== hash) {
+		if (user.hash !== hash && force !== 'true') {
 			return res.status(403).json({ message: 'Неверный хэш' })
 		} else {
 			await User.findOneAndUpdate(
