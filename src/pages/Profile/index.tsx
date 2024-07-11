@@ -1,15 +1,17 @@
+// noinspection JSAnnotator
+
+import { faClose } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { RootState, AppDispatch } from '../../store'
+import { Helmet } from 'react-helmet'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { logout } from '../../features/auth/authSlice'
 import axios from '../../features/auth/axios'
 import IUser from '../../features/interfaces/user.interface'
-import Subscriptions from './components/Subscriptions'
+import { AppDispatch, RootState } from '../../store'
 import Header from './components/Header'
-import { useNavigate } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faClose } from '@fortawesome/free-solid-svg-icons'
+import Subscriptions from './components/Subscriptions'
 
 interface IProfileProps {
 	userToken?: string
