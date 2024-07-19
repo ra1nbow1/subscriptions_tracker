@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import axios from './axios'
 
 interface AuthState {
@@ -27,7 +27,6 @@ export const loginUser = createAsyncThunk<
 	async (credentials: { email: string; password: string }, thunkAPI) => {
 		try {
 			const response = await axios.post('/auth/login', credentials)
-			console.log(response)
 			return response.data.token
 		} catch (error: unknown) {
 			let errorMessage = 'Unknown error'

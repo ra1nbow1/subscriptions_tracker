@@ -26,11 +26,22 @@ const AddSubscriptionPanel = ({
 		useState<ISubscription['renewalPeriod']>('месяц')
 	const [price, setPrice] = useState<ISubscription['price']>(0)
 	const [startDate, setStartDate] = useState<ISubscription['startDate']>(0)
+	const [website, setWebsite] = useState<ISubscription['website']>('')
 
 	const handleNewSubscription = () => {
 		if (!title || !renewalPeriod || !price || !startDate) {
+			console.log(title, price, renewalPeriod, startDate)
 			alert('Заполните все поля')
 		} else {
+			console.log({
+				title: title,
+				price: price,
+				renewalPeriod: renewalPeriod,
+				startDate: startDate,
+				sid: (Math.floor(Math.random() * 90000) + 10000).toString(),
+				description: description,
+				website: website,
+			})
 			axios
 				.put(`/api/${uid}/subscriptions`, {
 					subscriptions: [
@@ -43,6 +54,8 @@ const AddSubscriptionPanel = ({
 							sid: (
 								Math.floor(Math.random() * 90000) + 10000
 							).toString(),
+							description: description,
+							website: website,
 						},
 					],
 				})
@@ -55,7 +68,7 @@ const AddSubscriptionPanel = ({
 
 	return (
 		<div
-			className={`p-4 fixed top-0 right-0 h-full w-1/2 max-w-md bg-gray-800 shadow-lg transform ${isOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300`}>
+			className={`p-4 add-new-subscription fixed top-0 right-0 h-full w-1/2 max-w-md bg-gray-800 shadow-lg transform ${isOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300`}>
 			<div className="flex justify-between items-center p-4 border-b border-gray-700">
 				<h2 className="text-2xl text-white">Добавить подписку</h2>
 				<button onClick={togglePanel}>
@@ -66,60 +79,81 @@ const AddSubscriptionPanel = ({
 				</button>
 			</div>
 			<div className="p-6">
-				<input
-					type="text"
-					name="title"
-					id="title"
-					min="1"
-					onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-						setTitle(e.target.value)
-					}
-					className="block w-full outline-none rounded-md py-1 px-3 mb-2 bg-transparent border-2 text-gray-400 focus:placeholder-white focus:text-white border-blue-800 focus:border-blue-600 sm:text-sm sm:leading-4"
-					placeholder="Название"
-					required
-				/>
-				<textarea
-					name="description"
-					id="title"
-					onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-						setDescription(e.target.value)
-					}
-					className="block w-full outline-none rounded-md py-1 px-3 mb-2 bg-transparent border-2 text-gray-400 focus:placeholder-white focus:text-white border-blue-800 focus:border-blue-600 sm:text-sm sm:leading-4"
-					placeholder="Название"
-					required></textarea>
-				<select
-					onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-						setRenewalPeriod(e.target.value as 'месяц' | 'год')
-					}
-					className="w-full outline-none py-1 px-3 mb-2 bg-transparent sm:text-sm sm:leading-4 text-gray-400 border-2 border-blue-800 focus:border-blue-600 rounded-md focus:text-white appearance-none focus:shadow-outline">
-					<option value="месяц">Каждый месяц</option>
-					<option value="год">Каждый год</option>
-				</select>
-				<div className="relative rounded-md shadow-sm">
-					<div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-						<span className="text-gray-500 sm:text-sm">₽</span>
-					</div>
+				<div className="w-full max-w-md">
+					<label className="block mb-2 text-sm font-medium text-gray-400">
+						Название
+					</label>
 					<input
-						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-							setPrice(parseInt(e.target.value))
-						}
-						type="number"
-						name="price"
-						id="price"
-						min="1"
-						className="block w-full outline-none rounded-md mb-2 py-1 align-middle px-3 pl-7 bg-transparent border-2 focus:placeholder-white text-gray-400 focus:text-white border-blue-800 focus:border-blue-600 sm:text-sm sm:leading-4"
-						placeholder="0"
-						required
+						onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+							setTitle(e.target.value)
+						}}
+						type="text"
+						className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
 					/>
 				</div>
-				<input
-					onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-						setStartDate(new Date(e.target.value).getTime())
-					}
-					type="date"
-					required
-					className="block w-full mb-3 bg-transparent border-2 border-blue-800 focus:border-blue-600 mt-2 py-0 px-3 rounded-md sm:text-sm sm:leading-4 outline-none text-gray-400 focus:text-white"
-				/>
+				<div className="w-full max-w-md">
+					<label className="block mb-2 text-sm font-medium text-gray-400">
+						Описание
+					</label>
+					<textarea
+						onChange={(
+							e: React.ChangeEvent<HTMLTextAreaElement>,
+						) => {
+							setDescription(e.target.value)
+						}}
+						className="block w-full mb-3 h-14 resize-none outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"></textarea>
+				</div>
+				<div className="w-full max-w-md">
+					<label className="block mb-2 text-sm font-medium text-gray-400">
+						Периодичность
+					</label>
+					<select
+						onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+							setRenewalPeriod(e.target.value as 'месяц' | 'год')
+						}
+						className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200 appearance-none">
+						<option value="месяц">Каждый месяц</option>
+						<option value="год">Каждый год</option>
+					</select>
+				</div>
+				<div className="w-full max-w-md">
+					<label className="block mb-2 text-sm font-medium text-gray-400">
+						Стоимость
+					</label>
+					<input
+						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+							setPrice(parseFloat(e.target.value))
+						}
+						type="number"
+						min="0"
+						step="0.01"
+						className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
+					/>
+				</div>
+				<div className="w-full max-w-md mt-3">
+					<label className="block mb-2 text-sm font-medium text-gray-400">
+						Дата первого платежа
+					</label>
+					<input
+						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+							setStartDate(new Date(e.target.value).getTime())
+						}
+						type="date"
+						className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
+					/>
+				</div>
+				<div className="w-full max-w-md">
+					<label className="block mb-2 text-sm font-medium text-gray-400">
+						Сайт
+					</label>
+					<input
+						onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+							setWebsite(e.target.value)
+						}}
+						type="text"
+						className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
+					/>
+				</div>
 				<button
 					onClick={handleNewSubscription}
 					className="bg-blue-600 font-bold text-white px-4 py-2 rounded hover:bg-blue-800 transition-colors duration-300 mr-3">

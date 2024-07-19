@@ -32,20 +32,19 @@ function Subscriptions({
 							userToken={userToken}
 						/>
 					))}
-					<button
-						onClick={() => {
-							setIsAddingNewSubscription(true)
-						}}
-						className="bg-gray-800 p-4 h-60 rounded-lg shadow-md flex flex-col items-center justify-center text-center cursor-pointer hover:bg-gray-700 transition-colors duration-200">
-						<FontAwesomeIcon
-							icon={faSquarePlus}
-							size="2xl"
-							className="mb-1"
-						/>
-						<div className="text-3xl font-bold mb-4">Добавить</div>
-					</button>
 				</div>
 			</div>
+			<button
+				className="fixed right-5 bottom-5 bg-blue-700 transition-all duration-300 hover:scale-125 drop-shadow shadow-blue-800 shadow-2xl w-20 h-20 rounded-full"
+				onClick={() => {
+					setIsAddingNewSubscription(true)
+				}}>
+				<FontAwesomeIcon
+					icon={faSquarePlus}
+					size="2xl"
+					className="mb-1"
+				/>
+			</button>
 			<AddSubscriptionPanel
 				isOpen={isAddingNewSubscription}
 				togglePanel={() => setIsAddingNewSubscription(false)}

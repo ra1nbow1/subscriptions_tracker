@@ -1,0 +1,257 @@
+import { faGlobeEurope, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import React, { memo, useEffect, useState } from 'react'
+import axios from '../../../features/auth/axios'
+import { ISubscription } from '../../../features/interfaces/user.interface'
+import { validate_url } from '../utils.tsx'
+
+interface SubscriptionDetailsModalProps {
+	subscription: ISubscription
+	toggleModal: () => void
+	userToken?: string
+}
+
+const SubscriptionDetailsModal = memo(
+	({
+		subscription,
+		toggleModal,
+		userToken,
+	}: SubscriptionDetailsModalProps) => {
+		const [isEditing, setIsEditing] = useState(false)
+		const [title, setTitle] = useState<ISubscription['title']>(
+			subscription.title,
+		)
+		const [description, setDescription] = useState<
+			ISubscription['description']
+		>(subscription.description)
+		const [renewalPeriod, setRenewalPeriod] = useState<
+			ISubscription['renewalPeriod'] | ''
+		>(subscription.renewalPeriod)
+		const [price, setPrice] = useState<ISubscription['price']>(
+			subscription.price,
+		)
+		const [startDate, setStartDate] = useState<ISubscription['startDate']>(
+			subscription.startDate,
+		)
+		const [website, setWebsite] = useState<ISubscription['website']>(
+			subscription.website,
+		)
+		useEffect(() => {
+			const handleEsc = (event: KeyboardEvent) => {
+				if (event.key === 'Escape') {
+					toggleModal()
+				}
+			}
+
+			window.addEventListener('keydown', handleEsc)
+
+			return () => {
+				window.removeEventListener('keydown', handleEsc)
+			}
+		}, [toggleModal])
+
+		const deleteSubscription = () => {
+			const token = userToken || localStorage.getItem('token')
+			axios
+				.post(
+					'/api/delete',
+					{
+						sid: subscription.sid,
+					},
+					{
+						headers: { Authorization: `Bearer ${token}` },
+					},
+				)
+				.then(() => window.location.reload())
+		}
+
+		const updateSubscripion = () => {
+			if (!validate_url(website)) {
+				alert('Неверный формат URL')
+				return
+			}
+			const token = userToken || localStorage.getItem('token')
+			axios
+				.post(
+					'/api/edit',
+					{
+						sid: subscription.sid,
+						title: title,
+						description: description,
+						renewalPeriod: renewalPeriod,
+						price: price,
+						startDate: startDate,
+						website: website,
+					},
+					{
+						headers: { Authorization: `Bearer ${token}` },
+					},
+				)
+				.then(() => window.location.reload())
+		}
+
+		function convertToDate(ms: number): string {
+			const date = new Date(ms)
+			const year = date.getFullYear()
+			const month = ('0' + (date.getMonth() + 1)).slice(-2)
+			const day = ('0' + date.getDate()).slice(-2)
+			return `${year}-${month}-${day}`
+		}
+
+		return (
+			<div className="fixed subscription-modal inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 screen">
+				<div className="bg-gray-800 text-white rounded-lg shadow-lg w-11/12 max-w-lg p-6 relative">
+					<div className="flex flex-row justify-between items-center mb-4">
+						<h3 className="text-2xl font-bold">
+							{subscription.title}
+						</h3>
+						<button
+							onClick={toggleModal}
+							className="text-white text-2xl">
+							<FontAwesomeIcon icon={faTimes} />
+						</button>
+					</div>
+					<div className="w-full max-w-md">
+						<label className="block mb-2 text-sm font-medium text-gray-400">
+							Название
+						</label>
+						<input
+							onChange={(
+								e: React.ChangeEvent<HTMLInputElement>,
+							) => {
+								setTitle(e.target.value)
+							}}
+							value={title}
+							type="text"
+							disabled={!isEditing}
+							className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
+						/>
+					</div>
+					<div className="w-full max-w-md">
+						<label className="block mb-2 text-sm font-medium text-gray-400">
+							Описание
+						</label>
+						<textarea
+							value={description}
+							onChange={(
+								e: React.ChangeEvent<HTMLTextAreaElement>,
+							) => {
+								setDescription(e.target.value)
+							}}
+							disabled={!isEditing}
+							className="block w-full mb-3 h-14 resize-none outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"></textarea>
+					</div>
+					<div className="w-full max-w-md">
+						<label className="block mb-2 text-sm font-medium text-gray-400">
+							Периодичность
+						</label>
+						<select
+							onChange={(
+								e: React.ChangeEvent<HTMLSelectElement>,
+							) =>
+								setRenewalPeriod(
+									e.target.value as 'месяц' | 'год',
+								)
+							}
+							defaultValue={renewalPeriod}
+							disabled={!isEditing}
+							className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200 appearance-none">
+							<option value="месяц">Каждый месяц</option>
+							<option value="год">Каждый год</option>
+						</select>
+					</div>
+					<div className="w-full max-w-md">
+						<label className="block mb-2 text-sm font-medium text-gray-400">
+							Стоимость
+						</label>
+						<input
+							disabled={!isEditing}
+							type="number"
+							min="0"
+							step="0.01"
+							value={price}
+							className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
+						/>
+					</div>
+					<div className="w-full max-w-md mt-3">
+						<label className="block mb-2 text-sm font-medium text-gray-400">
+							Дата первого платежа
+						</label>
+						<input
+							disabled={!isEditing}
+							onChange={(
+								e: React.ChangeEvent<HTMLInputElement>,
+							) =>
+								setStartDate(new Date(e.target.value).getTime())
+							}
+							type="date"
+							value={convertToDate(startDate)}
+							className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
+						/>
+					</div>
+					<div className="w-full max-w-md mb-3">
+						<label className="block mb-2 text-sm font-medium text-gray-400">
+							Сайт
+						</label>
+						<div className="flex flex-row justify-center align-middle m-0">
+							<input
+								value={website}
+								disabled={!isEditing}
+								onChange={(
+									e: React.ChangeEvent<HTMLInputElement>,
+								) => {
+									setWebsite(e.target.value)
+								}}
+								type="text"
+								className="block w-full outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
+							/>
+							{subscription?.website && (
+								<a
+									href={subscription?.website}
+									target="_blank"
+									className="flex items-center bg-transparent border-2 border-gray-700 text-gray-400 font-bold px-3 text-sm place-content-center ml-2 rounded">
+									<FontAwesomeIcon icon={faGlobeEurope} />
+								</a>
+							)}
+						</div>
+					</div>
+					{!isEditing ? (
+						<>
+							<button
+								onClick={(
+									e: React.MouseEvent<HTMLButtonElement>,
+								) => {
+									setIsEditing(true)
+								}}
+								className="bg-blue-600 font-bold text-white px-4 py-2 rounded hover:bg-blue-800 transition-colors duration-300 mr-3">
+								Изменить
+							</button>
+							<button
+								onClick={deleteSubscription}
+								className="bg-red-500 font-bold text-white px-4 py-2 rounded hover:bg-red-800 transition-colors duration-300">
+								Удалить
+							</button>
+						</>
+					) : (
+						<>
+							<button
+								onClick={updateSubscripion}
+								className="bg-blue-600 font-bold text-white px-4 py-2 rounded hover:bg-blue-800 transition-colors duration-300 mr-3">
+								Сохранить
+							</button>
+							<button
+								onClick={() => {
+									setIsEditing(false)
+								}}
+								className="bg-red-500 font-bold text-white px-4 py-2 rounded hover:bg-red-800 transition-colors duration-300">
+								Отменить
+							</button>
+						</>
+					)}
+				</div>
+			</div>
+		)
+	},
+)
+
+export default SubscriptionDetailsModal

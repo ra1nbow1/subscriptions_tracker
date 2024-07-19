@@ -5,6 +5,7 @@ export interface ISubscription {
 	renewalPeriod: 'месяц' | 'год'
 	startDate: number
 	sid: string
+	website: string
 }
 
 export default interface IUser {

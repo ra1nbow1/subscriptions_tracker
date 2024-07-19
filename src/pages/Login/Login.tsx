@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { AppDispatch } from '../../store'
-import { loginUser } from '../../features/auth/authSlice'
-import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { loginUser } from '../../features/auth/authSlice'
+import { AppDispatch } from '../../store'
 
 function Login() {
 	const dispatch = useDispatch<AppDispatch>()

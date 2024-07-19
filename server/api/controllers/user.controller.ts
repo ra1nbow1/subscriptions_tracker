@@ -135,7 +135,6 @@ const addSubscription = async (
 ): Promise<Response<unknown, Record<string, IUser>>> => {
 	const { uid } = req.params
 	const { subscriptions }: { subscriptions: ISubscription[] } = req.body
-
 	try {
 		const updatedUser: IUser | null = (await User.findOneAndUpdate(
 			{ uid: uid },
@@ -145,7 +144,6 @@ const addSubscription = async (
 		if (!updatedUser) {
 			return res.status(404).json({ message: 'Пользователь не найден' })
 		}
-
 		return res.status(200).json(updatedUser)
 	} catch (err) {
 		console.error('Ошибка при обновлении подписок пользователя:', err)
@@ -193,8 +191,15 @@ const editSubscription = async (
 ): Promise<Response<unknown, Record<string, IUser>>> => {
 	const token: IUser['token'] | undefined =
 		req.headers.authorization?.split(' ')[1]
-	const { sid, title, renewalPeriod, price, startDate }: ISubscription =
-		req.body
+	const {
+		sid,
+		title,
+		renewalPeriod,
+		price,
+		startDate,
+		description,
+		website,
+	}: ISubscription = req.body
 
 	if (!token) {
 		return res
@@ -217,9 +222,11 @@ const editSubscription = async (
 					? {
 							...subscription,
 							title,
+							description,
 							renewalPeriod,
 							price,
 							startDate,
+							website,
 						}
 					: subscription,
 		)

@@ -1,11 +1,13 @@
-import mongoose, { Schema, Model, Document } from 'mongoose'
+import mongoose, { Document, Model, Schema } from 'mongoose'
 
 export interface ISubscription {
 	title: string
+	description?: string
 	price: number
 	renewalPeriod: string
 	startDate: number
 	sid: string
+	website?: string
 }
 
 export interface IUser extends Document {
@@ -65,6 +67,10 @@ const UserSchema = new Schema(
 			type: [
 				{
 					title: { type: Schema.Types.String, required: true },
+					description: {
+						type: Schema.Types.String,
+						required: false,
+					},
 					price: { type: Schema.Types.Number, required: true },
 					renewalPeriod: {
 						type: Schema.Types.String,
@@ -72,6 +78,7 @@ const UserSchema = new Schema(
 					},
 					startDate: { type: Schema.Types.Number, required: true },
 					sid: { type: Schema.Types.String, required: true },
+					website: { type: Schema.Types.String, required: false },
 				},
 			],
 			required: false,
