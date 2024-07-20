@@ -1,4 +1,6 @@
+import { faApple, faGoogle } from '@fortawesome/free-brands-svg-icons'
 import { faGlobeEurope, faTimes } from '@fortawesome/free-solid-svg-icons'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { memo, useEffect, useState } from 'react'
 import axios from '../../../features/auth/axios'
@@ -37,6 +39,7 @@ const SubscriptionDetailsModal = memo(
 		const [website, setWebsite] = useState<ISubscription['website']>(
 			subscription.website,
 		)
+		const [reminderDays, setReminderDays] = useState(1)
 		useEffect(() => {
 			const handleEsc = (event: KeyboardEvent) => {
 				if (event.key === 'Escape') {
@@ -99,20 +102,62 @@ const SubscriptionDetailsModal = memo(
 			return `${year}-${month}-${day}`
 		}
 
+		const createICalendarLink = (
+			startDate: number,
+			title: string,
+			description: string,
+			renewalPeriod: 'месяц' | 'год',
+		) => {
+			const reminderDate = new Date(startDate)
+			reminderDate.setDate(reminderDate.getDate() - reminderDays)
+
+			const recurrenceRule =
+				renewalPeriod === 'месяц'
+					? 'RRULE:FREQ=MONTHLY'
+					: 'RRULE:FREQ=YEARLY'
+			const formattedDescription = `${description} Подробнее на ${window.location.origin}`
+			const startDateFormat = new Date(startDate)
+				.toISOString()
+				.split('T')[0]
+				.replace(/-/g, '')
+			const reminderDateFormat = reminderDate
+				.toISOString()
+				.split('T')[0]
+				.replace(/-/g, '')
+
+			return `data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0AUID:${subscription.sid}%0ADTSTAMP:${reminderDateFormat}T000000Z%0ASUMMARY:Списание ${encodeURIComponent(title)}%0ADESCRIPTION:${encodeURIComponent(formattedDescription)}%0ADTSTART;VALUE=DATE:${startDateFormat}%0ADTEND;VALUE=DATE:${startDateFormat}%0A${recurrenceRule}%0AEND:VEVENT%0AEND:VCALENDAR`
+		}
+
+		const createGoogleCalendarLink = (
+			startDate: number,
+			title: string,
+			description: string,
+			renewalPeriod: 'месяц' | 'год',
+		) => {
+			const reminderDate = new Date(startDate)
+			reminderDate.setDate(reminderDate.getDate() - reminderDays)
+
+			const recurrenceRule =
+				renewalPeriod === 'месяц'
+					? 'RRULE:FREQ=MONTHLY'
+					: 'RRULE:FREQ=YEARLY'
+			const formattedDescription = `${description} Подробнее на ${window.location.origin}`
+			const startDateFormat = new Date(startDate)
+				.toISOString()
+				.split('T')[0]
+				.replace(/-/g, '')
+			const reminderDateFormat = reminderDate
+				.toISOString()
+				.split('T')[0]
+				.replace(/-/g, '')
+
+			return `https://www.google.com/calendar/render?action=TEMPLATE&text=Списание ${encodeURIComponent(title)}&dates=${startDateFormat}/${startDateFormat}&details=${encodeURIComponent(formattedDescription)}&recur=${recurrenceRule}&reminder=${reminderDateFormat}`
+		}
+
 		return (
 			<div className="fixed subscription-modal inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 screen">
 				<div className="bg-gray-800 text-white rounded-lg shadow-lg w-11/12 max-w-3xl p-6 relative flex flex-col sm:flex-row">
 					<div className="flex flex-col mr-5 sm:w-1/2">
-						{/*<div className="flex flex-row justify-between items-center mb-4">*/}
-						{/*	<h3 className="text-2xl font-bold">*/}
-						{/*		{subscription.title}*/}
-						{/*	</h3>*/}
-						{/*	<button*/}
-						{/*		onClick={toggleModal}*/}
-						{/*		className="text-white text-2xl">*/}
-						{/*		<FontAwesomeIcon icon={faTimes} />*/}
-						{/*	</button>*/}
-						{/*</div>*/}
 						<div className="w-full max-w-md">
 							<label className="block mb-2 text-sm font-medium text-gray-400">
 								Название
@@ -196,7 +241,7 @@ const SubscriptionDetailsModal = memo(
 								className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
 							/>
 						</div>
-						<div className="w-full max-w-md mb-3">
+						<div className="w-full max-w-md mb-2">
 							<label className="block mb-2 text-sm font-medium text-gray-400">
 								Сайт
 							</label>
@@ -210,7 +255,7 @@ const SubscriptionDetailsModal = memo(
 										setWebsite(e.target.value)
 									}}
 									type="text"
-									className="block w-full outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
+									className="block w-full mb-2 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
 								/>
 								{subscription?.website && (
 									<a
@@ -221,6 +266,34 @@ const SubscriptionDetailsModal = memo(
 									</a>
 								)}
 							</div>
+						</div>
+
+						<div className="w-full max-w-md flex flex-row mb-3">
+							<a
+								href={createICalendarLink(
+									subscription.startDate,
+									subscription.title,
+									subscription.description,
+									subscription.renewalPeriod,
+								)}
+								download={`${subscription.title}.ics`}
+								className="text-gray-400 border border-gray-400 rounded p-2 w-1/2 text-center">
+								<FontAwesomeIcon icon={faApple} /> Apple
+								Calendar
+							</a>
+							<a
+								href={createGoogleCalendarLink(
+									subscription.startDate,
+									subscription.title,
+									subscription.description,
+									subscription.renewalPeriod,
+								)}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="text-gray-400 border border-gray-400 rounded p-2 w-1/2 text-center">
+								<FontAwesomeIcon icon={faGoogle} /> Google
+								Calendar
+							</a>
 						</div>
 						{!isEditing ? (
 							<div className="flex flex-col justify-between w-full max-w-md">
