@@ -23,6 +23,8 @@ function Profile({ userToken }: Readonly<IProfileProps>) {
 	const { token } = useSelector((state: RootState) => state.auth)
 	const [popupState, setPopupState] = useState(false)
 	const [user, setUser] = useState<IUser>({
+		emailVerified: false,
+		hash: '',
 		uid: '',
 		first_name: '',
 		last_name: '',
@@ -72,7 +74,7 @@ function Profile({ userToken }: Readonly<IProfileProps>) {
 					managePopup={setPopupState}
 				/>
 			</header>
-			{popupState === true && (
+			{popupState && (
 				<div className="flex flex-col max-w-screen-xl p-4 bg-gray-800 transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded fixed">
 					<div className="flex justify-between items-center font-bold text-2xl mb-3">
 						{user.tgID != ''

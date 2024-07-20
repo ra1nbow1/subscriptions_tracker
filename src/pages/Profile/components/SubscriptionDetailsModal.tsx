@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { memo, useEffect, useState } from 'react'
 import axios from '../../../features/auth/axios'
 import { ISubscription } from '../../../features/interfaces/user.interface'
+import Payments from '../components/Payments.tsx'
 import { validate_url } from '../utils.tsx'
 
 interface SubscriptionDetailsModalProps {
@@ -66,7 +67,7 @@ const SubscriptionDetailsModal = memo(
 		}
 
 		const updateSubscripion = () => {
-			if (!validate_url(website)) {
+			if (website && !validate_url(website)) {
 				alert('Неверный формат URL')
 				return
 			}
@@ -100,154 +101,167 @@ const SubscriptionDetailsModal = memo(
 
 		return (
 			<div className="fixed subscription-modal inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 screen">
-				<div className="bg-gray-800 text-white rounded-lg shadow-lg w-11/12 max-w-lg p-6 relative">
-					<div className="flex flex-row justify-between items-center mb-4">
-						<h3 className="text-2xl font-bold">
-							{subscription.title}
-						</h3>
-						<button
-							onClick={toggleModal}
-							className="text-white text-2xl">
-							<FontAwesomeIcon icon={faTimes} />
-						</button>
-					</div>
-					<div className="w-full max-w-md">
-						<label className="block mb-2 text-sm font-medium text-gray-400">
-							Название
-						</label>
-						<input
-							onChange={(
-								e: React.ChangeEvent<HTMLInputElement>,
-							) => {
-								setTitle(e.target.value)
-							}}
-							value={title}
-							type="text"
-							disabled={!isEditing}
-							className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
-						/>
-					</div>
-					<div className="w-full max-w-md">
-						<label className="block mb-2 text-sm font-medium text-gray-400">
-							Описание
-						</label>
-						<textarea
-							value={description}
-							onChange={(
-								e: React.ChangeEvent<HTMLTextAreaElement>,
-							) => {
-								setDescription(e.target.value)
-							}}
-							disabled={!isEditing}
-							className="block w-full mb-3 h-14 resize-none outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"></textarea>
-					</div>
-					<div className="w-full max-w-md">
-						<label className="block mb-2 text-sm font-medium text-gray-400">
-							Периодичность
-						</label>
-						<select
-							onChange={(
-								e: React.ChangeEvent<HTMLSelectElement>,
-							) =>
-								setRenewalPeriod(
-									e.target.value as 'месяц' | 'год',
-								)
-							}
-							defaultValue={renewalPeriod}
-							disabled={!isEditing}
-							className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200 appearance-none">
-							<option value="месяц">Каждый месяц</option>
-							<option value="год">Каждый год</option>
-						</select>
-					</div>
-					<div className="w-full max-w-md">
-						<label className="block mb-2 text-sm font-medium text-gray-400">
-							Стоимость
-						</label>
-						<input
-							disabled={!isEditing}
-							type="number"
-							min="0"
-							step="0.01"
-							value={price}
-							className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
-						/>
-					</div>
-					<div className="w-full max-w-md mt-3">
-						<label className="block mb-2 text-sm font-medium text-gray-400">
-							Дата первого платежа
-						</label>
-						<input
-							disabled={!isEditing}
-							onChange={(
-								e: React.ChangeEvent<HTMLInputElement>,
-							) =>
-								setStartDate(new Date(e.target.value).getTime())
-							}
-							type="date"
-							value={convertToDate(startDate)}
-							className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
-						/>
-					</div>
-					<div className="w-full max-w-md mb-3">
-						<label className="block mb-2 text-sm font-medium text-gray-400">
-							Сайт
-						</label>
-						<div className="flex flex-row justify-center align-middle m-0">
+				<div className="bg-gray-800 text-white rounded-lg shadow-lg w-11/12 max-w-3xl p-6 relative flex flex-col sm:flex-row">
+					<div className="flex flex-col mr-5 sm:w-1/2">
+						{/*<div className="flex flex-row justify-between items-center mb-4">*/}
+						{/*	<h3 className="text-2xl font-bold">*/}
+						{/*		{subscription.title}*/}
+						{/*	</h3>*/}
+						{/*	<button*/}
+						{/*		onClick={toggleModal}*/}
+						{/*		className="text-white text-2xl">*/}
+						{/*		<FontAwesomeIcon icon={faTimes} />*/}
+						{/*	</button>*/}
+						{/*</div>*/}
+						<div className="w-full max-w-md">
+							<label className="block mb-2 text-sm font-medium text-gray-400">
+								Название
+							</label>
 							<input
-								value={website}
-								disabled={!isEditing}
 								onChange={(
 									e: React.ChangeEvent<HTMLInputElement>,
 								) => {
-									setWebsite(e.target.value)
+									setTitle(e.target.value)
 								}}
+								value={title}
 								type="text"
-								className="block w-full outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
+								disabled={!isEditing}
+								className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
 							/>
-							{subscription?.website && (
-								<a
-									href={subscription?.website}
-									target="_blank"
-									className="flex items-center bg-transparent border-2 border-gray-700 text-gray-400 font-bold px-3 text-sm place-content-center ml-2 rounded">
-									<FontAwesomeIcon icon={faGlobeEurope} />
-								</a>
-							)}
 						</div>
-					</div>
-					{!isEditing ? (
-						<>
-							<button
-								onClick={(
-									e: React.MouseEvent<HTMLButtonElement>,
+						<div className="w-full max-w-md">
+							<label className="block mb-2 text-sm font-medium text-gray-400">
+								Описание
+							</label>
+							<textarea
+								value={description}
+								onChange={(
+									e: React.ChangeEvent<HTMLTextAreaElement>,
 								) => {
-									setIsEditing(true)
+									setDescription(e.target.value)
 								}}
-								className="bg-blue-600 font-bold text-white px-4 py-2 rounded hover:bg-blue-800 transition-colors duration-300 mr-3">
-								Изменить
-							</button>
-							<button
-								onClick={deleteSubscription}
-								className="bg-red-500 font-bold text-white px-4 py-2 rounded hover:bg-red-800 transition-colors duration-300">
-								Удалить
-							</button>
-						</>
-					) : (
-						<>
-							<button
-								onClick={updateSubscripion}
-								className="bg-blue-600 font-bold text-white px-4 py-2 rounded hover:bg-blue-800 transition-colors duration-300 mr-3">
-								Сохранить
-							</button>
-							<button
-								onClick={() => {
-									setIsEditing(false)
-								}}
-								className="bg-red-500 font-bold text-white px-4 py-2 rounded hover:bg-red-800 transition-colors duration-300">
-								Отменить
-							</button>
-						</>
-					)}
+								disabled={!isEditing}
+								className="block w-full mb-3 h-14 resize-none outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"></textarea>
+						</div>
+						<div className="w-full max-w-md">
+							<label className="block mb-2 text-sm font-medium text-gray-400">
+								Периодичность
+							</label>
+							<select
+								onChange={(
+									e: React.ChangeEvent<HTMLSelectElement>,
+								) =>
+									setRenewalPeriod(
+										e.target.value as 'месяц' | 'год',
+									)
+								}
+								defaultValue={renewalPeriod}
+								disabled={!isEditing}
+								className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200 appearance-none">
+								<option value="месяц">Каждый месяц</option>
+								<option value="год">Каждый год</option>
+							</select>
+						</div>
+						<div className="w-full max-w-md">
+							<label className="block mb-2 text-sm font-medium text-gray-400">
+								Стоимость
+							</label>
+							<input
+								disabled={!isEditing}
+								type="number"
+								min="0"
+								step="0.01"
+								value={price}
+								onChange={(
+									e: React.ChangeEvent<HTMLInputElement>,
+								) => setPrice(parseInt(e.target.value))}
+								className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
+							/>
+						</div>
+						<div className="w-full max-w-md mt-3">
+							<label className="block mb-2 text-sm font-medium text-gray-400">
+								Дата первого платежа
+							</label>
+							<input
+								disabled={!isEditing}
+								onChange={(
+									e: React.ChangeEvent<HTMLInputElement>,
+								) =>
+									setStartDate(
+										new Date(e.target.value).getTime(),
+									)
+								}
+								type="date"
+								value={convertToDate(startDate)}
+								className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
+							/>
+						</div>
+						<div className="w-full max-w-md mb-3">
+							<label className="block mb-2 text-sm font-medium text-gray-400">
+								Сайт
+							</label>
+							<div className="flex flex-row justify-center align-middle m-0">
+								<input
+									value={website}
+									disabled={!isEditing}
+									onChange={(
+										e: React.ChangeEvent<HTMLInputElement>,
+									) => {
+										setWebsite(e.target.value)
+									}}
+									type="text"
+									className="block w-full outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
+								/>
+								{subscription?.website && (
+									<a
+										href={subscription?.website}
+										target="_blank"
+										className="flex items-center bg-transparent border-2 border-gray-700 text-gray-400 font-bold px-3 text-sm place-content-center ml-2 rounded">
+										<FontAwesomeIcon icon={faGlobeEurope} />
+									</a>
+								)}
+							</div>
+						</div>
+						{!isEditing ? (
+							<div className="flex flex-col justify-between w-full max-w-md">
+								<button
+									onClick={(
+										e: React.MouseEvent<HTMLButtonElement>,
+									) => {
+										setIsEditing(true)
+									}}
+									className="bg-blue-600 font-bold text-white px-4 py-2 rounded hover:bg-blue-800 transition-colors duration-300 mb-3">
+									Изменить
+								</button>
+								<button
+									onClick={deleteSubscription}
+									className="bg-red-500 font-bold text-white px-4 py-2 rounded hover:bg-red-800 transition-colors duration-300">
+									Удалить
+								</button>
+							</div>
+						) : (
+							<div className="flex flex-col justify-between">
+								<button
+									onClick={updateSubscripion}
+									className="bg-blue-600 font-bold text-white px-4 py-2 rounded hover:bg-blue-800 transition-colors duration-300 mb-3">
+									Сохранить
+								</button>
+								<button
+									onClick={() => {
+										setIsEditing(false)
+									}}
+									className="bg-red-500 font-bold text-white px-4 py-2 rounded hover:bg-red-800 transition-colors duration-300">
+									Отменить
+								</button>
+							</div>
+						)}
+					</div>
+					<button
+						onClick={toggleModal}
+						className="text-white text-2xl absolute top-2 right-3">
+						<FontAwesomeIcon icon={faTimes} />
+					</button>
+					<Payments subscription={subscription} />
 				</div>
 			</div>
 		)
