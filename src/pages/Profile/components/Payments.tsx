@@ -4,7 +4,7 @@ import { ISubscription } from '../../../features/interfaces/user.interface.ts'
 const Payments = memo(({ subscription }: { subscription: ISubscription }) => {
 	const generatePaymentDates = (
 		startDate: number,
-		renewalPeriod: 'месяц' | 'год',
+		renewalPeriod: 'month' | 'year',
 	) => {
 		const dates = []
 		const start = new Date(startDate)
@@ -12,9 +12,9 @@ const Payments = memo(({ subscription }: { subscription: ISubscription }) => {
 
 		while (start <= now) {
 			dates.push(new Date(start))
-			if (renewalPeriod === 'месяц') {
+			if (renewalPeriod === 'month') {
 				start.setMonth(start.getMonth() + 1)
-			} else if (renewalPeriod === 'год') {
+			} else if (renewalPeriod === 'year') {
 				start.setFullYear(start.getFullYear() + 1)
 			}
 		}
@@ -29,7 +29,7 @@ const Payments = memo(({ subscription }: { subscription: ISubscription }) => {
 		<div className="flex flex-col text-gray-400 overflow-y-auto max-w-md sm:w-1/2">
 			<div className="flex flex-row justify-between">
 				<h4 className="block mb-2 text-sm font-medium text-gray-400">
-					История списаний
+					Payments history
 				</h4>
 			</div>
 			<table className="min-w-full text-left">
@@ -39,10 +39,10 @@ const Payments = memo(({ subscription }: { subscription: ISubscription }) => {
 							#
 						</th>
 						<th className="py-2 px-4 border-b border-gray-400">
-							Дата списания
+							Date
 						</th>
 						<th className="py-2 px-4 border-b border-gray-400">
-							Сумма
+							Price
 						</th>
 					</tr>
 				</thead>
@@ -56,7 +56,7 @@ const Payments = memo(({ subscription }: { subscription: ISubscription }) => {
 								{date.toLocaleDateString()}
 							</td>
 							<td className="py-2 px-4 border-b border-gray-400">
-								{subscription.price} ₽
+								${subscription.price}
 							</td>
 						</tr>
 					))}

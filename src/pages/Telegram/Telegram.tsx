@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import axios from '../../features/auth/axios'
+import useTelegram from '../../features/hooks/useTelegram'
 import IUser from '../../features/interfaces/user.interface'
 import Header from '../Profile/components/Header'
 import Subscriptions from '../Profile/components/Subscriptions'
-import useTelegram from '../../features/hooks/useTelegram'
 
 function Telegram() {
 	const [uid, setUid] = useState('')
@@ -12,7 +12,9 @@ function Telegram() {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
-		let data = await axios.get(`tg/user/${uid}`).then((data) => data.data)
+		let data: IUser = await axios
+			.get(`tg/user/${uid}`)
+			.then((data) => data.data)
 
 		if (!data.tgID) {
 			await axios.post(`tg/user/`, {
@@ -52,7 +54,7 @@ function Telegram() {
 				<button
 					type="submit"
 					className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-800 transition-colors duration-300">
-					Войти
+					Sign In
 				</button>
 			</form>
 		</div>

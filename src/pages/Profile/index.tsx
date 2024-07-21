@@ -64,7 +64,7 @@ function Profile({ userToken }: Readonly<IProfileProps>) {
 		<>
 			<Helmet>
 				<title>
-					Подписки • {user.first_name} {user.last_name}
+					Subscriptions • {user.first_name} {user.last_name}
 				</title>
 			</Helmet>
 			<header>
@@ -78,8 +78,8 @@ function Profile({ userToken }: Readonly<IProfileProps>) {
 				<div className="flex flex-col max-w-screen-xl p-4 bg-gray-800 transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded fixed">
 					<div className="flex justify-between items-center font-bold text-2xl mb-3">
 						{user.tgID != ''
-							? 'Telegram подключен'
-							: 'Подключите Telegram'}
+							? 'Telegram is connected'
+							: 'Connect Telegram'}
 						<FontAwesomeIcon
 							icon={faClose}
 							size="2xl"
@@ -88,15 +88,15 @@ function Profile({ userToken }: Readonly<IProfileProps>) {
 						/>
 					</div>
 					<div className="mb-3">
-						Запустите{' '}
+						Run{' '}
 						<a
 							className="text-blue-600 underline"
 							href="https://t.me/subscriptions_tracker_bot">
-							бота
+							the bot
 						</a>{' '}
-						и используйте UID своего аккаунта
+						and use your account UID
 					</div>
-					<div className="mb-3">Нажмите, чтобы скопировать</div>
+					<div className="mb-3">Click to copy</div>
 					<button
 						onClick={copyUid}
 						className="p-4 text-center border border-dashed rounded border-gray-600 bg-gray-900 cursor-pointer">

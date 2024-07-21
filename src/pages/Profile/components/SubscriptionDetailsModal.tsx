@@ -72,9 +72,9 @@ const SubscriptionDetailsModal = memo(
 				.then(() => window.location.reload())
 		}
 
-		const updateSubscripion = () => {
+		const updateSubscription = () => {
 			if (website && !validate_url(website)) {
-				alert('Неверный формат URL')
+				alert('Wrong URL format')
 				return
 			}
 			const token = userToken || localStorage.getItem('token')
@@ -125,7 +125,7 @@ const SubscriptionDetailsModal = memo(
 				renewalPeriod === 'месяц'
 					? 'RRULE:FREQ=MONTHLY'
 					: 'RRULE:FREQ=YEARLY'
-			const formattedDescription = `${description} Подробнее на ${window.location.origin}`
+			const formattedDescription = `${description} More info on ${window.location.origin}`
 			const startDateFormat = new Date(startDate)
 				.toISOString()
 				.split('T')[0]
@@ -155,7 +155,7 @@ const SubscriptionDetailsModal = memo(
 				recurrenceRule,
 			] = prepareNotification(startDate, description, renewalPeriod)
 
-			return `data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0AUID:${subscription.sid}%0ADTSTAMP:${reminderDateFormat}T000000Z%0ASUMMARY:Списание ${encodeURIComponent(title)}%0ADESCRIPTION:${encodeURIComponent(formattedDescription)}%0ADTSTART;VALUE=DATE:${startDateFormat}%0ADTEND;VALUE=DATE:${startDateFormat}%0A${recurrenceRule}%0AEND:VEVENT%0AEND:VCALENDAR`
+			return `data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0AUID:${subscription.sid}%0ADTSTAMP:${reminderDateFormat}T000000Z%0ASUMMARY:Payment for a ${encodeURIComponent(title)}%0ADESCRIPTION:${encodeURIComponent(formattedDescription)}%0ADTSTART;VALUE=DATE:${startDateFormat}%0ADTEND;VALUE=DATE:${startDateFormat}%0A${recurrenceRule}%0AEND:VEVENT%0AEND:VCALENDAR`
 		}
 
 		const createGoogleCalendarLink = (
@@ -171,7 +171,7 @@ const SubscriptionDetailsModal = memo(
 				recurrenceRule,
 			] = prepareNotification(startDate, description, renewalPeriod)
 
-			return `https://www.google.com/calendar/render?action=TEMPLATE&text=Списание ${encodeURIComponent(title)}&dates=${startDateFormat}/${startDateFormat}&details=${encodeURIComponent(formattedDescription)}&recur=${recurrenceRule}&reminder=${reminderDateFormat}`
+			return `https://www.google.com/calendar/render?action=TEMPLATE&text=Payment for a ${encodeURIComponent(title)}&dates=${startDateFormat}/${startDateFormat}&details=${encodeURIComponent(formattedDescription)}&recur=${recurrenceRule}&reminder=${reminderDateFormat}`
 		}
 		console.log(categories)
 		return (
@@ -180,7 +180,7 @@ const SubscriptionDetailsModal = memo(
 					<div className="flex flex-col mr-5 sm:w-1/2">
 						<div className="w-full max-w-md">
 							<label className="block mb-2 text-sm font-medium text-gray-400">
-								Название
+								Title
 							</label>
 							<input
 								onChange={(
@@ -196,7 +196,7 @@ const SubscriptionDetailsModal = memo(
 						</div>
 						<div className="w-full max-w-md">
 							<label className="block mb-2 text-sm font-medium text-gray-400">
-								Описание
+								Description
 							</label>
 							<textarea
 								value={description}
@@ -210,26 +210,26 @@ const SubscriptionDetailsModal = memo(
 						</div>
 						<div className="w-full max-w-md">
 							<label className="block mb-2 text-sm font-medium text-gray-400">
-								Периодичность
+								Periodicity
 							</label>
 							<select
 								onChange={(
 									e: React.ChangeEvent<HTMLSelectElement>,
 								) =>
 									setRenewalPeriod(
-										e.target.value as 'месяц' | 'год',
+										e.target.value as 'month' | 'year',
 									)
 								}
 								defaultValue={renewalPeriod}
 								disabled={!isEditing}
 								className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200 appearance-none">
-								<option value="месяц">Каждый месяц</option>
-								<option value="год">Каждый год</option>
+								<option value="month">Monthly</option>
+								<option value="year">Annually</option>
 							</select>
 						</div>
 						<div className="w-full max-w-md">
 							<label className="block mb-2 text-sm font-medium text-gray-400">
-								Стоимость
+								Price
 							</label>
 							<input
 								disabled={!isEditing}
@@ -245,7 +245,7 @@ const SubscriptionDetailsModal = memo(
 						</div>
 						<div className="w-full max-w-md mt-3">
 							<label className="block mb-2 text-sm font-medium text-gray-400">
-								Дата первого платежа
+								First payment date
 							</label>
 							<input
 								disabled={!isEditing}
@@ -263,7 +263,7 @@ const SubscriptionDetailsModal = memo(
 						</div>
 						<div className="w-full max-w-md mb-2">
 							<label className="block mb-2 text-sm font-medium text-gray-400">
-								Сайт
+								Website
 							</label>
 							<div className="flex flex-row justify-center align-middle m-0">
 								<input
@@ -289,7 +289,7 @@ const SubscriptionDetailsModal = memo(
 						</div>
 						<div className="w-full max-w-md">
 							<label className="block mb-2 text-sm font-medium text-gray-400">
-								Категории
+								Categories
 							</label>
 							{!isEditing ? (
 								<div className="flex justify-around flex-wrap w-full mb-3 outline-none rounded-md py-2 px-2 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200">
@@ -298,7 +298,7 @@ const SubscriptionDetailsModal = memo(
 											<i key={index}>{category}</i>
 										))
 									) : (
-										<i>Не указано</i>
+										<i>Empty</i>
 									)}
 								</div>
 							) : (
@@ -338,9 +338,7 @@ const SubscriptionDetailsModal = memo(
 						{!isEditing ? (
 							<div className="flex flex-col justify-between w-full max-w-md">
 								<button
-									onClick={(
-										e: React.MouseEvent<HTMLButtonElement>,
-									) => {
+									onClick={() => {
 										setIsEditing(true)
 										let arr = []
 										for (let item of categories) {
@@ -352,20 +350,20 @@ const SubscriptionDetailsModal = memo(
 										setCategories(arr)
 									}}
 									className="bg-blue-600 font-bold text-white px-4 py-2 rounded hover:bg-blue-800 transition-colors duration-300 mb-3">
-									Изменить
+									Edit
 								</button>
 								<button
 									onClick={deleteSubscription}
 									className="bg-red-500 font-bold text-white px-4 py-2 rounded hover:bg-red-800 transition-colors duration-300">
-									Удалить
+									Delete
 								</button>
 							</div>
 						) : (
 							<div className="flex flex-col justify-between">
 								<button
-									onClick={updateSubscripion}
+									onClick={updateSubscription}
 									className="bg-blue-600 font-bold text-white px-4 py-2 rounded hover:bg-blue-800 transition-colors duration-300 mb-3">
-									Сохранить
+									Save
 								</button>
 								<button
 									onClick={() => {
@@ -373,7 +371,7 @@ const SubscriptionDetailsModal = memo(
 										resetToDefault()
 									}}
 									className="bg-red-500 font-bold text-white px-4 py-2 rounded hover:bg-red-800 transition-colors duration-300">
-									Отменить
+									Cancel
 								</button>
 							</div>
 						)}

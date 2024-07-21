@@ -30,7 +30,7 @@ function Login() {
 		<div className="flex flex-col items-center justify-center min-h-screen bg-gray-900">
 			<div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
 				<h2 className="text-3xl font-bold text-white mb-8 text-center">
-					Вход
+					Sign In
 				</h2>
 				<form onSubmit={handleSubmit}>
 					<div className="mb-4">
@@ -52,7 +52,7 @@ function Login() {
 						<label
 							htmlFor="password"
 							className="block text-sm font-medium text-gray-300 mb-2">
-							Пароль
+							Password
 						</label>
 						<input
 							type="password"
@@ -66,27 +66,27 @@ function Login() {
 					<button
 						type="submit"
 						className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-800 transition-colors duration-300">
-						Войти
+						Login
 					</button>
 				</form>
 				<div className="flex flex-col mt-3 justify-center text-center">
-					Нет аккаунта?
+					Don't have an account?
 					<a
 						href="/register"
 						className="text-blue-600 hover:underline">
 						{' '}
-						Зарегистрироваться{' '}
+						Sign Up{' '}
 					</a>
 				</div>
 			</div>
 			<Helmet>
-				<title>Трекер подписок • Вход</title>
+				<title>Subscriptions Tracker • Sign In</title>
 			</Helmet>
 			{alertIsOpened && (
 				<div
 					className="p-4 mb-4 text-sm text-red-800 fixed bottom-10 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
 					role="alert">
-					<span className="font-medium">Ошибка!</span> {alertContent}
+					<span className="font-medium">Error!</span> {alertContent}
 				</div>
 			)}
 		</div>

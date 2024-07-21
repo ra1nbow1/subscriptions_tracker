@@ -1,7 +1,7 @@
 export const categoriesList: { value: string; label: string }[] = [
-	{ value: 'Стриминг', label: 'Стриминг' },
-	{ value: 'ПО', label: 'ПО' },
-	{ value: 'Образование', label: 'Образование' },
-	{ value: 'Продуктивность', label: 'Продуктивность' },
-	{ value: 'Другое', label: 'Другое' },
+	{ value: 'Streaming', label: 'Streaming' },
+	{ value: 'Software', label: 'Software' },
+	{ value: 'Education', label: 'Education' },
+	{ value: 'Productivity', label: 'Productivity' },
+	{ value: 'Other', label: 'Other' },
 ]

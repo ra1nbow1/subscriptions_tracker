@@ -35,12 +35,12 @@ function Register() {
 		<div className="flex items-center justify-center min-h-screen bg-gray-900">
 			<div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
 				<h2 className="text-3xl font-bold text-white mb-8 text-center">
-					Регистрация
+					Sign Up
 				</h2>
 				<form onSubmit={handleRegister}>
 					<div className="mb-4">
 						<label className="block text-sm font-medium text-gray-300 mb-2">
-							Имя
+							First Name
 							<input
 								autoComplete="given-name"
 								id="first_name"
@@ -53,7 +53,7 @@ function Register() {
 					</div>
 					<div className="mb-4">
 						<label className="block text-sm font-medium text-gray-300 mb-2">
-							Фамилия
+							Last Name
 							<input
 								autoComplete="family-name"
 								id="last_name"
@@ -84,7 +84,7 @@ function Register() {
 						<label
 							htmlFor="password"
 							className="block text-sm font-medium text-gray-300 mb-2">
-							Пароль
+							Password
 						</label>
 						<input
 							autoComplete="new-password"
@@ -99,24 +99,24 @@ function Register() {
 					<button
 						type="submit"
 						className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-800 transition-colors duration-300">
-						Зарегистрироваться
+						Sign Up
 					</button>
 				</form>
 				<div className="flex flex-col mt-3 justify-center text-center">
-					Уже есть аккаунт?
+					Already have an account?
 					<a href="/login" className="text-blue-600 hover:underline">
-						Войти
+						Sign In
 					</a>
 				</div>
 				<Helmet>
-					<title>Трекер подписок • Регистрация</title>
+					<title>Subscriptions Tracker • Sign Up</title>
 				</Helmet>
 			</div>
 			{alertIsOpened && (
 				<div
 					className="p-4 mb-4 text-sm text-red-800 fixed bottom-10 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
 					role="alert">
-					<span className="font-medium">Ошибка!</span> {alertContent}
+					<span className="font-medium">Error!</span> {alertContent}
 				</div>
 			)}
 		</div>

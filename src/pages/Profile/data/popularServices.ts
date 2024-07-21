@@ -26,7 +26,7 @@ const popularServices = [
 	'Heroku',
 	'DigitalOcean',
 	'iCloud',
-	'Яндекс Плюс',
+	'Yandex Plus',
 	'Figma',
 ]
 
