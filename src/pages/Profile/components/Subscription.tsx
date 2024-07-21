@@ -9,13 +9,7 @@ interface SubscriptionProps {
 const Subscription: React.FC<SubscriptionProps> = ({ subscription }) => {
 	const [isModalOpen, setIsModalOpen] = useState(false)
 	const toggleModal = () => {
-		if (isModalOpen) {
-			setIsModalOpen(false)
-			document.body.style.overflow = 'auto'
-		} else {
-			setIsModalOpen(true)
-			document.body.style.overflow = 'hidden'
-		}
+		setIsModalOpen(!isModalOpen)
 	}
 	return (
 		<>
