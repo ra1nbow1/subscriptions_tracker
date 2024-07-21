@@ -13,7 +13,7 @@ const secretKey: string = process.env.TOKEN_KEY as string // Замените н
 // Регистрация пользователя
 const registerUser = async (req: Request, res: Response): Promise<Response> => {
 	const { first_name, last_name, email, password }: IUser = req.body
-
+	
 	if (!first_name || !last_name || !email || !password) {
 		return res.status(422).json({ message: 'Заполните все поля' })
 	}
@@ -95,6 +95,12 @@ const loginUser = async (req: Request, res: Response): Promise<Response> => {
 			.status(500)
 			.json({ message: 'Ошибка при входе пользователя' })
 	}
+}
+
+// Получение всех юзеров
+const getAllUsers = async (req: Request, res: Response): Promise<Response> => {
+	const users = await User.find()
+	return res.status(200).json(users)
 }
 
 // Получение данных пользователя
@@ -323,6 +329,7 @@ const verifyEmail = async (req: Request, res: Response) => {
 }
 
 export {
+	getAllUsers,
 	registerUser,
 	loginUser,
 	getUserData,

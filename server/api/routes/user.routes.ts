@@ -4,6 +4,7 @@ import {
 	deleteSubscription,
 	deleteUser,
 	editSubscription,
+	getAllUsers,
 	getUserData,
 	loginUser,
 	registerUser,
@@ -14,6 +15,8 @@ import {
 
 const userRoutes = (): Router => {
 	const router = Router()
+
+	router.get('/api/users/', getAllUsers as any)
 
 	router.post('/auth/register', registerUser as any)
 

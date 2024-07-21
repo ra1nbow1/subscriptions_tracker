@@ -92,7 +92,7 @@ const UserSchema = new Schema(
 		token: {
 			type: Schema.Types.String,
 			required: false,
-			unique: true,
+			unique: false,
 		},
 		tgID: {
 			type: Schema.Types.String,
