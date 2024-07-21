@@ -54,6 +54,10 @@ _MongoDB is deployed locally in a separate container, so `MONGO_URI` is not need
 ```bash
 # /server/api/.env
 TOKEN_KEY="your_token"
+MAIL_SERVER="" # URL for SMTP server
+MAIL_USER="" # Your mail user
+MAIL_PASSWORD="" # Your mail password
+BASE_URL="http://localhost:5555" # Base URL that will be used in email confirmation link (localhost for development)
 
 # you can create /.env to run the bot
 VITE_WITH_TELEGRAM="true"
