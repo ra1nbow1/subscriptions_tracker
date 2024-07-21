@@ -1,6 +1,8 @@
 import { faClose } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
+import Autosuggest from 'react-autosuggest'
+import popularServices from '../../../data/popularServices.ts'
 import axios from '../../../features/auth/axios'
 import IUser, {
 	ISubscription,
@@ -27,7 +29,30 @@ const AddSubscriptionPanel = ({
 	const [price, setPrice] = useState<ISubscription['price']>(0)
 	const [startDate, setStartDate] = useState<ISubscription['startDate']>(0)
 	const [website, setWebsite] = useState<ISubscription['website']>('')
+	const [suggestions, setSuggestions] = useState<string[]>([])
 
+	const onSuggestionsFetchRequested = ({ value }: { value: string }) => {
+		setSuggestions(getSuggestions(value))
+	}
+
+	const onSuggestionsClearRequested = () => {
+		setSuggestions([])
+	}
+
+	const getSuggestions = (value: string) => {
+		const inputValue = value.trim().toLowerCase()
+		const inputLength = inputValue.length
+
+		return inputLength === 0
+			? []
+			: popularServices.filter((service) =>
+					service.toLowerCase().includes(inputValue),
+				)
+	}
+	console.log(suggestions)
+	const getSuggestionValue = (suggestion: string) => suggestion
+
+	const renderSuggestion = (suggestion: string) => <div>{suggestion}</div>
 	const handleNewSubscription = () => {
 		if (!title || !renewalPeriod || !price || !startDate) {
 			console.log(title, price, renewalPeriod, startDate)
@@ -83,12 +108,40 @@ const AddSubscriptionPanel = ({
 					<label className="block mb-2 text-sm font-medium text-gray-400">
 						Название
 					</label>
-					<input
-						onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-							setTitle(e.target.value)
+					<Autosuggest
+						suggestions={suggestions}
+						onSuggestionsFetchRequested={
+							onSuggestionsFetchRequested
+						}
+						onSuggestionsClearRequested={
+							onSuggestionsClearRequested
+						}
+						getSuggestionValue={getSuggestionValue}
+						renderSuggestion={renderSuggestion}
+						inputProps={{
+							value: title,
+							onChange: (e, { newValue }) => setTitle(newValue),
+							className:
+								'block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200',
 						}}
-						type="text"
-						className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
+						theme={
+							title
+								? {
+										container: 'relative',
+										suggestionsContainer:
+											(!title ? 'hidden' : '') +
+											'absolute w-full z-10 bg-gray-800 border-2 border-gray-700 rounded-md mt-1',
+										suggestionsList: 'list-none p-0 m-0',
+										suggestion:
+											'p-2 cursor-pointer hover:bg-gray-700 rounded text-gray-400',
+										suggestionHighlighted: 'bg-gray-700',
+										suggestionsHidden:
+											'hidden display-none',
+									}
+								: {
+										display: 'none',
+									}
+						}
 					/>
 				</div>
 				<div className="w-full max-w-md">
