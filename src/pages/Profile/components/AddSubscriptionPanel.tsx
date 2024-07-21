@@ -2,11 +2,13 @@ import { faClose } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
 import Autosuggest from 'react-autosuggest'
-import popularServices from '../../../data/popularServices.ts'
-import axios from '../../../features/auth/axios'
+import axios from '../../../features/auth/axios.ts'
 import IUser, {
 	ISubscription,
 } from '../../../features/interfaces/user.interface'
+
+import popularServices from '../data/popularServices.ts'
+import CategoriesSelect from './CategoriesSelect.tsx'
 
 interface AddSubscriptionPanelProps {
 	isOpen: boolean
@@ -30,6 +32,9 @@ const AddSubscriptionPanel = ({
 	const [startDate, setStartDate] = useState<ISubscription['startDate']>(0)
 	const [website, setWebsite] = useState<ISubscription['website']>('')
 	const [suggestions, setSuggestions] = useState<string[]>([])
+	const [categories, setCategories] = useState<ISubscription['categories']>(
+		[],
+	)
 
 	const onSuggestionsFetchRequested = ({ value }: { value: string }) => {
 		setSuggestions(getSuggestions(value))
@@ -49,7 +54,6 @@ const AddSubscriptionPanel = ({
 					service.toLowerCase().includes(inputValue),
 				)
 	}
-	console.log(suggestions)
 	const getSuggestionValue = (suggestion: string) => suggestion
 
 	const renderSuggestion = (suggestion: string) => <div>{suggestion}</div>
@@ -58,15 +62,6 @@ const AddSubscriptionPanel = ({
 			console.log(title, price, renewalPeriod, startDate)
 			alert('Заполните все поля')
 		} else {
-			console.log({
-				title: title,
-				price: price,
-				renewalPeriod: renewalPeriod,
-				startDate: startDate,
-				sid: (Math.floor(Math.random() * 90000) + 10000).toString(),
-				description: description,
-				website: website,
-			})
 			axios
 				.put(`/api/${uid}/subscriptions`, {
 					subscriptions: [
@@ -81,6 +76,7 @@ const AddSubscriptionPanel = ({
 							).toString(),
 							description: description,
 							website: website,
+							categories: categories.map((item) => item.value),
 						},
 					],
 				})
@@ -164,6 +160,7 @@ const AddSubscriptionPanel = ({
 						onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
 							setRenewalPeriod(e.target.value as 'месяц' | 'год')
 						}
+						placeholder={'Периодичность'}
 						className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200 appearance-none">
 						<option value="месяц">Каждый месяц</option>
 						<option value="год">Каждый год</option>
@@ -205,6 +202,15 @@ const AddSubscriptionPanel = ({
 						}}
 						type="text"
 						className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
+					/>
+				</div>
+				<div className="w-full max-w-md">
+					<label className="block mb-2 text-sm font-medium text-gray-400">
+						Категории
+					</label>
+					<CategoriesSelect
+						categpries={categories}
+						setCategories={setCategories}
 					/>
 				</div>
 				<button

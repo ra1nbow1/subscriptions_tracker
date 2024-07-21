@@ -6,6 +6,7 @@ export interface ISubscription {
 	startDate: number
 	sid: string
 	website: string
+	categories: string[]
 }
 
 export default interface IUser {
