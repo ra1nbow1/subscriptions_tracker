@@ -3,6 +3,7 @@ import * as crypto from 'crypto'
 import dotenv from 'dotenv'
 import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
+import { BinaryLike } from 'node:crypto'
 import QueryString from 'qs'
 import sendMail from '../mailer/mailer'
 import { ISubscription, IUser, User } from '../models/user.model'
@@ -33,7 +34,7 @@ const registerUser = async (req: Request, res: Response): Promise<Response> => {
 		const uid = (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6)
 		const hash = crypto
 			.createHash('md5')
-			.update(email.split('@')[0])
+			.update(email.split('@')[0] as BinaryLike)
 			.digest('hex')
 
 		await sendMail(email, uid, hash)
@@ -158,7 +159,9 @@ const deleteSubscription = async (
 	req: Request,
 	res: Response,
 ): Promise<Response<unknown, Record<string, IUser>>> => {
-	const token: IUser['token'] = req.headers.authorization?.split(' ')[1]
+	const token: IUser['token'] = req.headers.authorization?.split(
+		' ',
+	)[1] as string
 	const { sid }: { sid: ISubscription['sid'] } = req.body
 
 	if (!token) {
@@ -285,7 +288,10 @@ const tgGetUserData = async (req: Request, res: Response) => {
 }
 
 const verifyEmail = async (req: Request, res: Response) => {
-	const { uid, hash }: { uid: IUser['uid']; hash: string } = req.params
+	const { uid, hash }: { uid: IUser['uid']; hash: string } = req.params as {
+		uid: string
+		hash: string
+	}
 	const force:
 		| string
 		| string[]
@@ -310,7 +316,11 @@ const verifyEmail = async (req: Request, res: Response) => {
 			)
 			return res.status(200).json({ message: 'Email подтвержден' })
 		}
-	} catch (err) {}
+	} catch (err) {
+		return res
+			.status(500)
+			.json({ message: 'Ошибка при подтверждении email' })
+	}
 }
 
 export {
