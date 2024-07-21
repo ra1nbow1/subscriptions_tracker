@@ -3,7 +3,6 @@ import * as crypto from 'crypto'
 import dotenv from 'dotenv'
 import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
-import { BinaryLike } from 'node:crypto'
 import QueryString from 'qs'
 import sendMail from '../mailer/mailer'
 import { ISubscription, IUser, User } from '../models/user.model'
@@ -34,7 +33,7 @@ const registerUser = async (req: Request, res: Response): Promise<Response> => {
 		const uid = (Math.random() * 0xfffff * 1000000).toString(16).slice(0, 6)
 		const hash = crypto
 			.createHash('md5')
-			.update(email.split('@')[0] as BinaryLike)
+			.update(email.split('@')[0] as any)
 			.digest('hex')
 
 		await sendMail(email, uid, hash)
