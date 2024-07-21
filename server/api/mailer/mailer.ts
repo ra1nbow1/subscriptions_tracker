@@ -20,9 +20,9 @@ export default async function sendMail(
 	hash: IUser['hash'],
 ) {
 	await transporter.sendMail({
-		from: `"Трекер подписок" <${process.env.MAIL_USER}>`,
+		from: `"Subscriptions tracker" <${process.env.MAIL_USER}>`,
 		to: recipient,
-		subject: 'Подтвердите адрес электронной почты',
-		html: `Для подтверждения перейдите по <a href="${process.env.BASE_URL}/auth/verify/${uid}/${hash}/">ссылке</a>`,
+		subject: 'Email confirmation',
+		html: `Go to <a href="${process.env.BASE_URL}/auth/verify/${uid}/${hash}/">this</a> page to confirm your email`,
 	})
 }

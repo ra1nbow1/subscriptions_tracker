@@ -13,9 +13,9 @@ const secretKey: string = process.env.TOKEN_KEY as string // Замените н
 // Регистрация пользователя
 const registerUser = async (req: Request, res: Response): Promise<Response> => {
 	const { first_name, last_name, email, password }: IUser = req.body
-	
+
 	if (!first_name || !last_name || !email || !password) {
-		return res.status(422).json({ message: 'Заполните все поля' })
+		return res.status(422).json({ message: 'Fill all the fields' })
 	}
 
 	try {
@@ -26,7 +26,7 @@ const registerUser = async (req: Request, res: Response): Promise<Response> => {
 		if (existingUser) {
 			return res
 				.status(409)
-				.json({ message: 'Пользователь с таким email уже существует' })
+				.json({ message: 'User with this email already exists' })
 		}
 
 		const hashedPassword = await bcrypt.hash(password, 10)
@@ -53,10 +53,8 @@ const registerUser = async (req: Request, res: Response): Promise<Response> => {
 
 		return res.status(201).json(newUser)
 	} catch (err) {
-		console.error('Ошибка при создании пользователя:', err)
-		return res
-			.status(500)
-			.json({ message: 'Ошибка при создании пользователя' })
+		console.error('Error while creating user:', err)
+		return res.status(500).json({ message: 'Error while creating user' })
 	}
 }
 
@@ -65,24 +63,24 @@ const loginUser = async (req: Request, res: Response): Promise<Response> => {
 	const { email, password }: IUser = req.body
 
 	if (!email || !password) {
-		return res.status(422).json({ message: 'Заполните все поля' })
+		return res.status(422).json({ message: 'Fill all the fields' })
 	}
 
 	try {
 		const user: IUser = (await User.findOne({ email })) as IUser
 		if (!user) {
-			return res.status(401).json({ message: 'Неверные учетные данные' })
+			return res.status(401).json({ message: 'Wrong credentials' })
 		}
 
 		if (!user.emailVerified) {
-			return res.status(401).json({ message: 'Email не подтвержден' })
+			return res.status(401).json({ message: 'Email is not verified' })
 		}
 
 		const isPasswordValid = await bcrypt.compare(password, user.password)
 		const isHashValid = password === user.password
 
 		if (!isPasswordValid && !isHashValid) {
-			return res.status(401).json({ message: 'Неверные учетные данные' })
+			return res.status(401).json({ message: 'Wrong credentials' })
 		}
 
 		const token: IUser['token'] = jwt.sign({ uid: user.uid }, secretKey, {
@@ -90,10 +88,10 @@ const loginUser = async (req: Request, res: Response): Promise<Response> => {
 		})
 		return res.status(200).json({ token })
 	} catch (err) {
-		console.error('Ошибка при входе пользователя:', err)
+		console.error('Error while user logging in occurred:', err)
 		return res
 			.status(500)
-			.json({ message: 'Ошибка при входе пользователя' })
+			.json({ message: 'Error while user logging in occurred' })
 	}
 }
 
@@ -109,9 +107,7 @@ const getUserData = async (req: Request, res: Response): Promise<Response> => {
 		req.headers.authorization?.split(' ')[1]
 
 	if (!token) {
-		return res
-			.status(401)
-			.json({ message: 'Пожалуйста, войдите в систему' })
+		return res.status(401).json({ message: 'Please, log in to the system' })
 	}
 
 	try {
@@ -122,15 +118,15 @@ const getUserData = async (req: Request, res: Response): Promise<Response> => {
 			'-password',
 		)) as IUser // Исключить поле password из результата
 		if (!user) {
-			return res.status(404).json({ message: 'Пользователь не найден' })
+			return res.status(404).json({ message: 'User is not found' })
 		}
 
 		return res.status(200).json(user)
 	} catch (err) {
-		console.error('Ошибка при получении данных пользователя:', err)
+		console.error('Error while getting user data occurred:', err)
 		return res
 			.status(500)
-			.json({ message: 'Ошибка при получении данных пользователя' })
+			.json({ message: 'Error while getting user data occurred' })
 	}
 }
 
@@ -148,14 +144,14 @@ const addSubscription = async (
 			{ new: true },
 		)) as IUser
 		if (!updatedUser) {
-			return res.status(404).json({ message: 'Пользователь не найден' })
+			return res.status(404).json({ message: 'User is not found' })
 		}
 		return res.status(200).json(updatedUser)
 	} catch (err) {
-		console.error('Ошибка при обновлении подписок пользователя:', err)
+		console.error('Error while adding subscription occurred:', err)
 		return res
 			.status(500)
-			.json({ message: 'Ошибка при обновлении подписок пользователя' })
+			.json({ message: 'Error while adding subscription occurred' })
 	}
 }
 
@@ -170,9 +166,7 @@ const deleteSubscription = async (
 	const { sid }: { sid: ISubscription['sid'] } = req.body
 
 	if (!token) {
-		return res
-			.status(401)
-			.json({ message: 'Пожалуйста, войдите в систему' })
+		return res.status(401).json({ message: 'Please, log in to the system' })
 	}
 
 	try {
@@ -187,8 +181,10 @@ const deleteSubscription = async (
 
 		return res.status(200).json(user)
 	} catch (err) {
-		console.error('Ошибка при удалении подписки', err)
-		return res.status(500).json({ message: 'Ошибка при удалении подписки' })
+		console.error('Error while deleting subscription occurred', err)
+		return res
+			.status(500)
+			.json({ message: 'Error while deleting subscription occurred' })
 	}
 }
 
@@ -211,9 +207,7 @@ const editSubscription = async (
 	}: ISubscription = req.body
 
 	if (!token) {
-		return res
-			.status(401)
-			.json({ message: 'Пожалуйста, войдите в систему' })
+		return res.status(401).json({ message: 'Please, log in to the system' })
 	}
 
 	try {
@@ -222,7 +216,7 @@ const editSubscription = async (
 
 		const user: IUser | null = (await User.findOne({ uid: uid })) as IUser
 		if (!user) {
-			return res.status(404).json({ message: 'Пользователь не найден' })
+			return res.status(404).json({ message: 'User is not found' })
 		}
 
 		user.subscriptions = user.subscriptions.map(
@@ -244,10 +238,10 @@ const editSubscription = async (
 
 		return res.status(200).json(user)
 	} catch (err) {
-		console.error('Ошибка при редактировании подписки', err)
+		console.error('Error while editing subscription occurred', err)
 		return res
 			.status(500)
-			.json({ message: 'Ошибка при редактировании подписки' })
+			.json({ message: 'Error while editing subscription occurred' })
 	}
 }
 
@@ -255,7 +249,7 @@ const deleteUser = async (req: Request, res: Response) => {
 	const { uid } = req.params
 
 	await User.findOneAndDelete({ uid: uid })
-	return res.status(200).json({ message: 'Пользователь удален' })
+	return res.status(200).json({ message: 'User deleted' })
 }
 
 const tgSetUserId = async (req: Request, res: Response) => {
@@ -267,15 +261,15 @@ const tgSetUserId = async (req: Request, res: Response) => {
 			{ new: true },
 		)) as IUser
 		if (!user) {
-			return res.status(404).json({ message: 'Пользователь не найден' })
+			return res.status(404).json({ message: 'User is not found' })
 		}
 
 		return res.status(200).json(user)
 	} catch (err) {
-		console.error('Ошибка при обновлении подписок пользователя:', err)
+		console.error('Error while setting user data occurred:', err)
 		return res
 			.status(500)
-			.json({ message: 'Ошибка при обновлении подписок пользователя' })
+			.json({ message: 'Error while setting user data occurred' })
 	}
 }
 
@@ -285,10 +279,10 @@ const tgGetUserData = async (req: Request, res: Response) => {
 		const user: IUser = (await User.findOne({ uid: uid })) as IUser
 		return res.status(200).json(user)
 	} catch (err) {
-		console.error('Ошибка при поиске пользователя:', err)
+		console.error('Error while searching user occurred:', err)
 		return res
 			.status(500)
-			.json({ message: 'Ошибка при поиске пользователя' })
+			.json({ message: 'Error while searching user occurred' })
 	}
 }
 
@@ -306,25 +300,27 @@ const verifyEmail = async (req: Request, res: Response) => {
 	try {
 		const user: IUser = (await User.findOne({ uid: uid })) as IUser
 		if (!user) {
-			return res.status(404).json({ message: 'Пользователь не найден' })
+			return res.status(404).json({ message: 'User is not found' })
 		}
 		if (user.emailVerified) {
-			return res.status(403).json({ message: 'Email уже подтвержден' })
+			return res
+				.status(403)
+				.json({ message: 'Email is already verified' })
 		}
 		if (user.hash !== hash && force !== 'true') {
-			return res.status(403).json({ message: 'Неверный хэш' })
+			return res.status(403).json({ message: 'Wrong hash' })
 		} else {
 			await User.findOneAndUpdate(
 				{ uid: uid },
 				{ emailVerified: true },
 				{ new: true },
 			)
-			return res.status(200).json({ message: 'Email подтвержден' })
+			return res.status(200).json({ message: 'Email verified' })
 		}
 	} catch (err) {
 		return res
 			.status(500)
-			.json({ message: 'Ошибка при подтверждении email' })
+			.json({ message: 'Error while verifying email occurred' })
 	}
 }
 
