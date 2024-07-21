@@ -1,4 +1,4 @@
-export const categoriesList = [
+export const categoriesList: { value: string; label: string }[] = [
 	{ value: 'Стриминг', label: 'Стриминг' },
 	{ value: 'ПО', label: 'ПО' },
 	{ value: 'Образование', label: 'Образование' },

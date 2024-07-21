@@ -7,6 +7,7 @@ import axios from '../../../features/auth/axios'
 import { ISubscription } from '../../../features/interfaces/user.interface'
 import Payments from '../components/Payments.tsx'
 import { validate_url } from '../utils.tsx'
+import CategoriesSelect from './CategoriesSelect.tsx'
 
 interface SubscriptionDetailsModalProps {
 	subscription: ISubscription
@@ -39,7 +40,9 @@ const SubscriptionDetailsModal = memo(
 		const [website, setWebsite] = useState<ISubscription['website']>(
 			subscription.website,
 		)
-		const [reminderDays, setReminderDays] = useState(1)
+		const [categories, setCategories] = useState<any>(
+			subscription.categories,
+		)
 		useEffect(() => {
 			const handleEsc = (event: KeyboardEvent) => {
 				if (event.key === 'Escape') {
@@ -86,6 +89,7 @@ const SubscriptionDetailsModal = memo(
 						price: price,
 						startDate: startDate,
 						website: website,
+						categories: categories.map((item) => item.value),
 					},
 					{
 						headers: { Authorization: `Bearer ${token}` },
@@ -94,22 +98,28 @@ const SubscriptionDetailsModal = memo(
 				.then(() => window.location.reload())
 		}
 
-		function convertToDate(ms: number): string {
-			const date = new Date(ms)
-			const year = date.getFullYear()
-			const month = ('0' + (date.getMonth() + 1)).slice(-2)
-			const day = ('0' + date.getDate()).slice(-2)
-			return `${year}-${month}-${day}`
+		function resetToDefault() {
+			setTitle(subscription.title)
+			setDescription(subscription.description)
+			setRenewalPeriod(subscription.renewalPeriod)
+			setPrice(subscription.price)
+			setStartDate(subscription.startDate)
+			setWebsite(subscription.website)
+			setCategories(subscription.categories)
 		}
 
-		const createICalendarLink = (
-			startDate: number,
-			title: string,
-			description: string,
-			renewalPeriod: 'месяц' | 'год',
-		) => {
+		function convertToDate(ms: number): string {
+			const date = new Date(ms)
+			return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`
+		}
+
+		function prepareNotification(
+			startDate: ISubscription['startDate'],
+			description: ISubscription['description'],
+			renewalPeriod: ISubscription['renewalPeriod'],
+		): string[] {
 			const reminderDate = new Date(startDate)
-			reminderDate.setDate(reminderDate.getDate() - reminderDays)
+			reminderDate.setDate(reminderDate.getDate() - 1)
 
 			const recurrenceRule =
 				renewalPeriod === 'месяц'
@@ -124,36 +134,46 @@ const SubscriptionDetailsModal = memo(
 				.toISOString()
 				.split('T')[0]
 				.replace(/-/g, '')
+			return [
+				reminderDateFormat,
+				startDateFormat,
+				formattedDescription,
+				recurrenceRule,
+			]
+		}
+
+		const createICalendarLink = (
+			startDate: ISubscription['startDate'],
+			title: ISubscription['title'],
+			description: ISubscription['description'],
+			renewalPeriod: ISubscription['renewalPeriod'],
+		): string => {
+			const [
+				reminderDateFormat,
+				startDateFormat,
+				formattedDescription,
+				recurrenceRule,
+			] = prepareNotification(startDate, description, renewalPeriod)
 
 			return `data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0AUID:${subscription.sid}%0ADTSTAMP:${reminderDateFormat}T000000Z%0ASUMMARY:Списание ${encodeURIComponent(title)}%0ADESCRIPTION:${encodeURIComponent(formattedDescription)}%0ADTSTART;VALUE=DATE:${startDateFormat}%0ADTEND;VALUE=DATE:${startDateFormat}%0A${recurrenceRule}%0AEND:VEVENT%0AEND:VCALENDAR`
 		}
 
 		const createGoogleCalendarLink = (
-			startDate: number,
-			title: string,
-			description: string,
-			renewalPeriod: 'месяц' | 'год',
-		) => {
-			const reminderDate = new Date(startDate)
-			reminderDate.setDate(reminderDate.getDate() - reminderDays)
-
-			const recurrenceRule =
-				renewalPeriod === 'месяц'
-					? 'RRULE:FREQ=MONTHLY'
-					: 'RRULE:FREQ=YEARLY'
-			const formattedDescription = `${description} Подробнее на ${window.location.origin}`
-			const startDateFormat = new Date(startDate)
-				.toISOString()
-				.split('T')[0]
-				.replace(/-/g, '')
-			const reminderDateFormat = reminderDate
-				.toISOString()
-				.split('T')[0]
-				.replace(/-/g, '')
+			startDate: ISubscription['startDate'],
+			title: ISubscription['title'],
+			description: ISubscription['description'],
+			renewalPeriod: ISubscription['renewalPeriod'],
+		): string => {
+			const [
+				reminderDateFormat,
+				startDateFormat,
+				formattedDescription,
+				recurrenceRule,
+			] = prepareNotification(startDate, description, renewalPeriod)
 
 			return `https://www.google.com/calendar/render?action=TEMPLATE&text=Списание ${encodeURIComponent(title)}&dates=${startDateFormat}/${startDateFormat}&details=${encodeURIComponent(formattedDescription)}&recur=${recurrenceRule}&reminder=${reminderDateFormat}`
 		}
-
+		console.log(categories)
 		return (
 			<div className="fixed subscription-modal inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 screen">
 				<div className="bg-gray-800 text-white rounded-lg shadow-lg w-11/12 max-w-3xl p-6 relative flex flex-col sm:flex-row">
@@ -255,7 +275,7 @@ const SubscriptionDetailsModal = memo(
 										setWebsite(e.target.value)
 									}}
 									type="text"
-									className="block w-full mb-2 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
+									className="block w-full outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200"
 								/>
 								{subscription?.website && (
 									<a
@@ -267,7 +287,27 @@ const SubscriptionDetailsModal = memo(
 								)}
 							</div>
 						</div>
-
+						<div className="w-full max-w-md">
+							<label className="block mb-2 text-sm font-medium text-gray-400">
+								Категории
+							</label>
+							{!isEditing ? (
+								<div className="flex justify-around flex-wrap w-full mb-3 outline-none rounded-md py-2 px-2 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200">
+									{categories.length > 0 ? (
+										categories?.map((category, index) => (
+											<i key={index}>{category}</i>
+										))
+									) : (
+										<i>Не указано</i>
+									)}
+								</div>
+							) : (
+								<CategoriesSelect
+									categories={categories}
+									setCategories={setCategories}
+								/>
+							)}
+						</div>
 						<div className="w-full max-w-md flex flex-row mb-3">
 							<a
 								href={createICalendarLink(
@@ -302,6 +342,14 @@ const SubscriptionDetailsModal = memo(
 										e: React.MouseEvent<HTMLButtonElement>,
 									) => {
 										setIsEditing(true)
+										let arr = []
+										for (let item of categories) {
+											let obj = {}
+											obj['value'] = item
+											obj['label'] = item
+											arr.push(obj)
+										}
+										setCategories(arr)
 									}}
 									className="bg-blue-600 font-bold text-white px-4 py-2 rounded hover:bg-blue-800 transition-colors duration-300 mb-3">
 									Изменить
@@ -322,6 +370,7 @@ const SubscriptionDetailsModal = memo(
 								<button
 									onClick={() => {
 										setIsEditing(false)
+										resetToDefault()
 									}}
 									className="bg-red-500 font-bold text-white px-4 py-2 rounded hover:bg-red-800 transition-colors duration-300">
 									Отменить

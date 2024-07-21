@@ -8,6 +8,7 @@ export interface ISubscription {
 	startDate: number
 	sid: string
 	website?: string
+	categories: string[]
 }
 
 export interface IUser extends Document {
@@ -79,6 +80,10 @@ const UserSchema = new Schema(
 					startDate: { type: Schema.Types.Number, required: true },
 					sid: { type: Schema.Types.String, required: true },
 					website: { type: Schema.Types.String, required: false },
+					categories: {
+						type: [Schema.Types.String],
+						required: false,
+					},
 				},
 			],
 			required: false,

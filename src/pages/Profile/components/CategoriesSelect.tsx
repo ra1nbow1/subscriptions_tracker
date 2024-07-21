@@ -2,10 +2,19 @@ import React from 'react'
 import Select from 'react-select'
 import { categoriesList } from '../data/categories.ts'
 
-function CategoriesSelect({ categories, setCategories }) {
+interface ICategoriesSelectProps {
+	categories: string[]
+	setCategories: (el: unknown) => void
+}
+
+function CategoriesSelect({
+	categories,
+	setCategories,
+}: ICategoriesSelectProps) {
 	return (
 		<Select
 			unstyled
+			noOptionsMessage="Не указано"
 			classNames={{
 				menuList: () =>
 					'text-gray-400 border-2 border-gray-700 rounded bg-gray-800',

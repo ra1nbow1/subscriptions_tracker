@@ -199,6 +199,7 @@ const editSubscription = async (
 		startDate,
 		description,
 		website,
+		categories,
 	}: ISubscription = req.body
 
 	if (!token) {
@@ -227,6 +228,7 @@ const editSubscription = async (
 							price,
 							startDate,
 							website,
+							categories,
 						}
 					: subscription,
 		)

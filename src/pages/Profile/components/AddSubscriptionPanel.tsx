@@ -6,8 +6,6 @@ import axios from '../../../features/auth/axios.ts'
 import IUser, {
 	ISubscription,
 } from '../../../features/interfaces/user.interface'
-
-import popularServices from '../data/popularServices.ts'
 import CategoriesSelect from './CategoriesSelect.tsx'
 
 interface AddSubscriptionPanelProps {
@@ -31,32 +29,10 @@ const AddSubscriptionPanel = ({
 	const [price, setPrice] = useState<ISubscription['price']>(0)
 	const [startDate, setStartDate] = useState<ISubscription['startDate']>(0)
 	const [website, setWebsite] = useState<ISubscription['website']>('')
-	const [suggestions, setSuggestions] = useState<string[]>([])
-	const [categories, setCategories] = useState<ISubscription['categories']>(
-		[],
-	)
+	const [categories, setCategories] = useState<
+		ISubscription['categories'] | { value: string; item: string }[]
+	>([])
 
-	const onSuggestionsFetchRequested = ({ value }: { value: string }) => {
-		setSuggestions(getSuggestions(value))
-	}
-
-	const onSuggestionsClearRequested = () => {
-		setSuggestions([])
-	}
-
-	const getSuggestions = (value: string) => {
-		const inputValue = value.trim().toLowerCase()
-		const inputLength = inputValue.length
-
-		return inputLength === 0
-			? []
-			: popularServices.filter((service) =>
-					service.toLowerCase().includes(inputValue),
-				)
-	}
-	const getSuggestionValue = (suggestion: string) => suggestion
-
-	const renderSuggestion = (suggestion: string) => <div>{suggestion}</div>
 	const handleNewSubscription = () => {
 		if (!title || !renewalPeriod || !price || !startDate) {
 			console.log(title, price, renewalPeriod, startDate)
@@ -76,7 +52,9 @@ const AddSubscriptionPanel = ({
 							).toString(),
 							description: description,
 							website: website,
-							categories: categories.map((item) => item.value),
+							categories: categories.map((item) =>
+								typeof item === 'object' ? item?.value : item,
+							),
 						},
 					],
 				})
@@ -160,7 +138,6 @@ const AddSubscriptionPanel = ({
 						onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
 							setRenewalPeriod(e.target.value as 'месяц' | 'год')
 						}
-						placeholder={'Периодичность'}
 						className="block w-full mb-3 outline-none rounded-md py-2 px-3 bg-gray-800 border-2 border-gray-700 text-gray-400 focus:placeholder-white focus:text-white focus:border-blue-600 sm:text-sm sm:leading-4 transition duration-200 appearance-none">
 						<option value="месяц">Каждый месяц</option>
 						<option value="год">Каждый год</option>
@@ -209,7 +186,7 @@ const AddSubscriptionPanel = ({
 						Категории
 					</label>
 					<CategoriesSelect
-						categpries={categories}
+						categories={categories as string[]}
 						setCategories={setCategories}
 					/>
 				</div>
