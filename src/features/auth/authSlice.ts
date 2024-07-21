@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import axios from './axios'
 
 interface AuthState {
@@ -29,9 +29,17 @@ export const loginUser = createAsyncThunk<
 			const response = await axios.post('/auth/login', credentials)
 			return response.data.token
 		} catch (error: unknown) {
+			let errorMessage = 'Unknown error'
+			if (
+				error.response &&
+				error.response.data &&
+				error.response.data.message
+			) {
+				errorMessage = error.response.data.message
+			}
 			return thunkAPI.rejectWithValue({
-				error: 'Unknown error',
-				message: '',
+				error: 'Error',
+				message: errorMessage,
 			})
 		}
 	},
@@ -61,9 +69,17 @@ export const registerUser = createAsyncThunk<
 			const response = await axios.post('/auth/register', userData)
 			return response.data.token
 		} catch (error) {
+			let errorMessage = 'Unknown error'
+			if (
+				error.response &&
+				error.response.data &&
+				error.response.data.message
+			) {
+				errorMessage = error.response.data.message
+			}
 			return thunkAPI.rejectWithValue({
-				error: 'Unknown error',
-				message: '',
+				error: 'Error',
+				message: errorMessage,
 			})
 		}
 	},

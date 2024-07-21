@@ -1,11 +1,14 @@
-import mongoose, { Schema, Model, Document } from 'mongoose'
+import mongoose, { Document, Model, Schema } from 'mongoose'
 
 export interface ISubscription {
 	title: string
+	description?: string
 	price: number
 	renewalPeriod: string
 	startDate: number
 	sid: string
+	website?: string
+	categories: string[]
 }
 
 export interface IUser extends Document {
@@ -17,6 +20,8 @@ export interface IUser extends Document {
 	subscriptions: ISubscription[]
 	token: string
 	tgID: string
+	hash: string
+	emailVerified: boolean
 }
 
 type UserInput = {
@@ -28,6 +33,8 @@ type UserInput = {
 	subscriptions: IUser['subscriptions']
 	token: IUser['token']
 	tgID: IUser['tgID']
+	hash: IUser['hash']
+	emailVerified: IUser['emailVerified']
 }
 
 const UserSchema = new Schema(
@@ -61,6 +68,10 @@ const UserSchema = new Schema(
 			type: [
 				{
 					title: { type: Schema.Types.String, required: true },
+					description: {
+						type: Schema.Types.String,
+						required: false,
+					},
 					price: { type: Schema.Types.Number, required: true },
 					renewalPeriod: {
 						type: Schema.Types.String,
@@ -68,6 +79,11 @@ const UserSchema = new Schema(
 					},
 					startDate: { type: Schema.Types.Number, required: true },
 					sid: { type: Schema.Types.String, required: true },
+					website: { type: Schema.Types.String, required: false },
+					categories: {
+						type: [Schema.Types.String],
+						required: false,
+					},
 				},
 			],
 			required: false,
@@ -76,10 +92,20 @@ const UserSchema = new Schema(
 		token: {
 			type: Schema.Types.String,
 			required: false,
-			unique: true,
+			unique: false,
 		},
 		tgID: {
 			type: Schema.Types.String,
+			required: false,
+			unique: false,
+		},
+		hash: {
+			type: Schema.Types.String,
+			required: false,
+			unique: true,
+		},
+		emailVerified: {
+			type: Schema.Types.Boolean,
 			required: false,
 			unique: false,
 		},

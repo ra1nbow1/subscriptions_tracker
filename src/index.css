@@ -10,8 +10,54 @@
 		-moz-appearance: textfield !important;
 	}
 }
+
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+}
+
+/* Add this CSS to your main stylesheet */
+
+.add-new-subscription {
+	width: 50%;
+	max-width: 500px;
+}
+
+.subscription-modal {
+	width: 100%;
+	max-width: 100%;
+}
+
+@media (max-width: 768px) {
+	.add-new-subscription {
+		width: 100vw;
+		height: 100vh;
+		top: 0;
+		right: 0;
+		transform: none;
+		border-radius: 0;
+	}
+
+	.subscription-modal > div {
+		width: 100%;
+		max-width: 100%;
+		height: 100%;
+	}
+}
+
+.transition-transform {
+	transition: transform 0.3s ease-in-out;
+}
+
+.transform {
+	transform: translateX(100%);
+}
+
+.translate-x-0 {
+	transform: translateX(0);
+}
+
+.translate-x-full {
+	transform: translateX(100%);
 }

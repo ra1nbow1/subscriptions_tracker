@@ -1,15 +1,17 @@
+// noinspection JSAnnotator
+
+import { faClose } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { RootState, AppDispatch } from '../../store'
+import { Helmet } from 'react-helmet'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { logout } from '../../features/auth/authSlice'
 import axios from '../../features/auth/axios'
 import IUser from '../../features/interfaces/user.interface'
-import Subscriptions from './components/Subscriptions'
+import { AppDispatch, RootState } from '../../store'
 import Header from './components/Header'
-import { useNavigate } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faClose } from '@fortawesome/free-solid-svg-icons'
+import Subscriptions from './components/Subscriptions'
 
 interface IProfileProps {
 	userToken?: string
@@ -21,6 +23,8 @@ function Profile({ userToken }: Readonly<IProfileProps>) {
 	const { token } = useSelector((state: RootState) => state.auth)
 	const [popupState, setPopupState] = useState(false)
 	const [user, setUser] = useState<IUser>({
+		emailVerified: false,
+		hash: '',
 		uid: '',
 		first_name: '',
 		last_name: '',
@@ -28,18 +32,17 @@ function Profile({ userToken }: Readonly<IProfileProps>) {
 		password: '',
 		subscriptions: [],
 		token: '',
-		tgID: ''
+		tgID: '',
 	})
 
 	useEffect(() => {
 		const fetchUser = async () => {
 			try {
 				const response = await axios.get('/api/user', {
-					headers: { Authorization: `Bearer ${token}` }
+					headers: { Authorization: `Bearer ${token}` },
 				})
 				setUser(response.data)
-			}
-			catch (error) {
+			} catch (error) {
 				console.error('Error fetching user:', error)
 				dispatch(logout())
 				navigate('/login')
@@ -48,8 +51,7 @@ function Profile({ userToken }: Readonly<IProfileProps>) {
 
 		if (token) {
 			fetchUser()
-		}
-		else {
+		} else {
 			navigate('/login')
 		}
 	}, [token, dispatch, history])
@@ -62,7 +64,7 @@ function Profile({ userToken }: Readonly<IProfileProps>) {
 		<>
 			<Helmet>
 				<title>
-					Подписки • {user.first_name} {user.last_name}
+					Subscriptions • {user.first_name} {user.last_name}
 				</title>
 			</Helmet>
 			<header>
@@ -72,11 +74,12 @@ function Profile({ userToken }: Readonly<IProfileProps>) {
 					managePopup={setPopupState}
 				/>
 			</header>
-			{popupState === true && (
-				<div
-					className="flex flex-col max-w-screen-xl p-4 bg-gray-800 transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded fixed">
+			{popupState && (
+				<div className="flex flex-col max-w-screen-xl p-4 bg-gray-800 transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded fixed">
 					<div className="flex justify-between items-center font-bold text-2xl mb-3">
-						{user.tgID != '' ? 'Telegram подключен' : 'Подключите Telegram'}
+						{user.tgID != ''
+							? 'Telegram is connected'
+							: 'Connect Telegram'}
 						<FontAwesomeIcon
 							icon={faClose}
 							size="2xl"
@@ -85,15 +88,15 @@ function Profile({ userToken }: Readonly<IProfileProps>) {
 						/>
 					</div>
 					<div className="mb-3">
-						Запустите{' '}
+						Run{' '}
 						<a
 							className="text-blue-600 underline"
 							href="https://t.me/subscriptions_tracker_bot">
-							бота
+							the bot
 						</a>{' '}
-						и используйте UID своего аккаунта
+						and use your account UID
 					</div>
-					<div className="mb-3">Нажмите, чтобы скопировать</div>
+					<div className="mb-3">Click to copy</div>
 					<button
 						onClick={copyUid}
 						className="p-4 text-center border border-dashed rounded border-gray-600 bg-gray-900 cursor-pointer">

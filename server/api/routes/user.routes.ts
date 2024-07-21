@@ -1,22 +1,28 @@
 import { Router } from 'express'
 import {
-	registerUser,
-	loginUser,
-	getUserData,
-	deleteUser,
 	addSubscription,
 	deleteSubscription,
+	deleteUser,
 	editSubscription,
-	tgSetUserId,
+	getAllUsers,
+	getUserData,
+	loginUser,
+	registerUser,
 	tgGetUserData,
+	tgSetUserId,
+	verifyEmail,
 } from '../controllers/user.controller'
 
 const userRoutes = (): Router => {
 	const router = Router()
 
+	router.get('/api/users/', getAllUsers as any)
+
 	router.post('/auth/register', registerUser as any)
 
 	router.post('/auth/login', loginUser as any)
+
+	router.get('/auth/verify/:uid/:hash', verifyEmail)
 
 	router.get('/api/user', getUserData as any)
 

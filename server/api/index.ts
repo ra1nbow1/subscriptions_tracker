@@ -1,10 +1,10 @@
-import express from 'express'
-import userRoutes from './routes/user.routes'
-import dotenv from 'dotenv'
-import { connectToDatabase } from './db-connection'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import dotenv from 'dotenv'
+import express from 'express'
+import { connectToDatabase } from './db-connection'
+import userRoutes from './routes/user.routes'
 
 dotenv.config()
 connectToDatabase()
@@ -20,5 +20,5 @@ app.use(bodyParser.urlencoded({ extended: true }))
 const port = 5555
 
 app.listen(port, () => {
-	console.log(`Бэкенд запущен на ${port} порту`)
+	console.log(`Backend is running on ${port} port`)
 })

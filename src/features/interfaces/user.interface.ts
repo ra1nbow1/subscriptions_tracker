@@ -1,9 +1,12 @@
 export interface ISubscription {
 	title: string
+	description: string
 	price: number
-	renewalPeriod: 'месяц' | 'год'
+	renewalPeriod: 'month' | 'year'
 	startDate: number
 	sid: string
+	website: string
+	categories: string[]
 }
 
 export default interface IUser {
@@ -15,4 +18,6 @@ export default interface IUser {
 	subscriptions: ISubscription[]
 	token: string
 	tgID: string
+	hash: string
+	emailVerified: boolean
 }

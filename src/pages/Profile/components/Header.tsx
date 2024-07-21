@@ -1,12 +1,12 @@
+import { faTelegram } from '@fortawesome/free-brands-svg-icons'
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
+import { useDispatch } from 'react-redux'
+import { logout } from '../../../features/auth/authSlice'
 import IUser, {
 	ISubscription,
 } from '../../../features/interfaces/user.interface'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
-import { faTelegram } from '@fortawesome/free-brands-svg-icons'
-import { useDispatch } from 'react-redux'
-import { logout } from '../../../features/auth/authSlice'
 import { AppDispatch } from '../../../store'
 
 interface IHeaderProps {
@@ -35,14 +35,12 @@ function Header({
 
 			let periods = 0
 
-			if (renewalPeriod === 'месяц') {
-				const monthsDiff =
+			if (renewalPeriod === 'month') {
+				periods =
 					(end.getFullYear() - start.getFullYear()) * 12 +
 					(end.getMonth() - start.getMonth())
-				periods = monthsDiff
-			} else if (renewalPeriod === 'год') {
-				const yearsDiff = end.getFullYear() - start.getFullYear()
-				periods = yearsDiff
+			} else if (renewalPeriod === 'year') {
+				periods = end.getFullYear() - start.getFullYear()
 			}
 
 			if (end > start) {
@@ -54,9 +52,9 @@ function Header({
 	}
 
 	const monthlySpend = subscriptions.reduce((total, subscription) => {
-		if (subscription.renewalPeriod.toLowerCase() === 'месяц') {
+		if (subscription.renewalPeriod.toLowerCase() === 'month') {
 			return total + subscription.price
-		} else if (subscription.renewalPeriod.toLowerCase() === 'год') {
+		} else if (subscription.renewalPeriod.toLowerCase() === 'year') {
 			return total + subscription.price / 12
 		}
 		return total
@@ -79,25 +77,29 @@ function Header({
 							onClick={handleLogout}
 							className="lg:ml-4 md:ml-0 align-middle text-white bg-blue-600 px-4 py-2 rounded hover:bg-blue-800 transition-colors duration-300">
 							<FontAwesomeIcon icon={faSignOutAlt} size="lg" />{' '}
-							Выйти
+							Logout
 						</button>
 					)}
 					{import.meta.env.VITE_WITH_TELEGRAM == 'true' &&
 						env === 'web' && (
 							<button
-								onClick={managePopup ? () => managePopup(!popupState) : () => {}}
+								onClick={() =>
+									managePopup
+										? managePopup(!popupState)
+										: () => {}
+								}
 								className="lg:ml-4 md:ml-0 text-white bg-telegram px-4 py-2 rounded hover:bg-telegram-light transition-colors duration-300">
 								<FontAwesomeIcon icon={faTelegram} size="lg" />{' '}
-								{user.tgID ? 'Подключено' : 'Подключить'}
+								{user.tgID ? 'Connected' : 'Connect'}
 							</button>
 						)}
 				</div>
 				<div className="text-right mr-4">
 					<p>
-						Потрачено всего: ~
-						{calculateTotalExpenses(subscriptions).toFixed(2)}₽
+						Totally spent: ~ $
+						{calculateTotalExpenses(subscriptions).toFixed(2)}
 					</p>
-					<p>В месяц: ~{monthlySpend.toFixed(2)}₽</p>
+					<p>Per month: ~ ${monthlySpend.toFixed(2)}</p>
 				</div>
 			</div>
 		</header>
