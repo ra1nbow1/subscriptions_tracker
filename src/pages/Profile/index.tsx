@@ -54,7 +54,7 @@ function Profile({ userToken }: Readonly<IProfileProps>) {
 		} else {
 			navigate('/login')
 		}
-	}, [token, dispatch, history])
+        }, [token, dispatch, navigate])
 
 	const copyUid = () => {
 		navigator.clipboard.writeText(user.uid)
