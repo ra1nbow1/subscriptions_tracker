@@ -1,0 +1,7 @@
+{
+  "name": "subscriptions-tracker-mobile",
+  "type": "react",
+  "integrations": {
+    "capacitor": {}
+  }
+}
